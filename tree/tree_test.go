@@ -47,7 +47,13 @@ func TestDataSource_shift(t *testing.T) {
 	}
 }
 
-func TestDumpFromHead(t *testing.T) {
+var (
+	tree1 = dataSource{data: []string{"a", "b", emptyMark, "c", emptyMark, emptyMark, "d", emptyMark, emptyMark}}
+	tree2 = dataSource{data: []string{"a", "b", "c", emptyMark, emptyMark, emptyMark, "e", "f", emptyMark, emptyMark, "g", "h", emptyMark}}
+	tree3 = dataSource{data: []string{"a", "b", "d", emptyMark, emptyMark, "e", "f", emptyMark, emptyMark, "g", emptyMark, emptyMark, "c", emptyMark, emptyMark}}
+)
+
+func TestDumpByHead(t *testing.T) {
 	tests := []struct {
 		name   string
 		source dataSource
@@ -55,26 +61,64 @@ func TestDumpFromHead(t *testing.T) {
 	}{
 		{
 			`generate tree and headDump`,
-			dataSource{data: []string{"a", "b", emptyMark, "c", emptyMark, emptyMark, "d", emptyMark, emptyMark}},
+			tree1,
 			[]string{"a", "b", "c", "d"},
 		},
 		{
 			`generate tree and headDump`,
-			dataSource{data: []string{"a", "b", "c", emptyMark, emptyMark, emptyMark,
-				"e", "f", emptyMark, emptyMark, "g", "h", emptyMark}},
+			tree2,
 			[]string{"a", "b", "c", "e", "f", "g", "h"},
 		},
 		{
 			`generate tree and headDump`,
-			dataSource{data: []string{"a", "b", "d", emptyMark, emptyMark, "e",
-				"f", emptyMark, emptyMark, "g", emptyMark, emptyMark, "c", emptyMark, emptyMark}},
+			tree3,
 			[]string{"a", "b", "d", "e", "f", "g", "c"},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			binTree := CreateNodeFromHead(&tt.source)()
-			assert.Equal(t, tt.expect, binTree.DumpFromHead())
+			binTree := CreateNodeByHead(&tt.source)()
+			assert.Equal(t, tt.expect, binTree.DumpByHead())
+		})
+	}
+}
+
+func TestDumpByMid(t *testing.T) {
+	tests := []struct {
+		name   string
+		source dataSource
+		expect []string
+	}{
+		{
+			`generate tree and midDump`,
+			tree1,
+			[]string{"b", "c", "a", "d"},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			binTree := CreateNodeByHead(&tt.source)()
+			assert.Equal(t, tt.expect, binTree.DumpByMid())
+		})
+	}
+}
+
+func TestDumpByTail(t *testing.T) {
+	tests := []struct {
+		name   string
+		source dataSource
+		expect []string
+	}{
+		{
+			`generate tree and midDump`,
+			tree1,
+			[]string{"c", "b", "d", "a"},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			binTree := CreateNodeByHead(&tt.source)()
+			assert.Equal(t, tt.expect, binTree.DumpTail())
 		})
 	}
 }

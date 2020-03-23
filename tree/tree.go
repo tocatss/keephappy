@@ -12,7 +12,7 @@ type BinTreeNode struct {
 	rightChild *BinTreeNode
 }
 
-func CreateNodeFromHead(ds *dataSource) (createNode func() *BinTreeNode) {
+func CreateNodeByHead(ds *dataSource) (createNode func() *BinTreeNode) {
 	if ds == nil {
 		return nil
 	}
@@ -33,13 +33,46 @@ func CreateNodeFromHead(ds *dataSource) (createNode func() *BinTreeNode) {
 	}
 }
 
-func (b *BinTreeNode) DumpFromHead() []string {
-	buff := []string{}
-	dumpFromHead(&buff)(b)
+func (b *BinTreeNode) DumpTail() []string {
+	var buff []string
+	dumpByTail := func() (dump func(b *BinTreeNode)) {
+		return func(b *BinTreeNode) {
+			if b == nil {
+				return
+			}
+			dump(b.leftChild)
+			dump(b.rightChild)
+			buff = append(buff, b.data)
+		}
+	}
+	dumpByTail()(b)
 	return buff
 }
 
-func dumpFromHead(buff *[]string) (dump func(b *BinTreeNode)) {
+func (b *BinTreeNode) DumpByMid() []string {
+	var buff []string
+	dumpByMid(&buff)(b)
+	return buff
+}
+
+func dumpByMid(buff *[]string) (dump func(b *BinTreeNode)) {
+	return func(b *BinTreeNode) {
+		if b == nil {
+			return
+		}
+		dump(b.leftChild)
+		*buff = append(*buff, b.data)
+		dump(b.rightChild)
+	}
+}
+
+func (b *BinTreeNode) DumpByHead() []string {
+	buff := []string{}
+	dumpByHead(&buff)(b)
+	return buff
+}
+
+func dumpByHead(buff *[]string) (dump func(b *BinTreeNode)) {
 	return func(b *BinTreeNode) {
 		if b == nil {
 			return
