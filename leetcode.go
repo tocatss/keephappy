@@ -477,3 +477,20 @@ func intMin(a, b int) int {
 func isLengthLarger(s []int, i int) bool {
 	return len(s) > i
 }
+
+func isIntPalindrome(x int) bool {
+	if x < 0 || (x%10 == 0 && x != 0) {
+		return false
+	}
+
+	v := x
+	var r int
+	for v >= r {
+		r = 10*r + v%10
+		if v == r || v/10 == r {
+			return true
+		}
+		v = v / 10
+	}
+	return false
+}

@@ -537,3 +537,37 @@ func Test_FindNthSmallestOf2Slice(t *testing.T) {
 		})
 	}
 }
+
+func Test_isIntPalindrome(t *testing.T) {
+	tests := []struct {
+		name    string
+		payload int
+		expect  bool
+	}{
+		{
+			"121 == 121",
+			121,
+			true,
+		},
+		{
+			"1221 == 1221",
+			1221,
+			true,
+		},
+		{
+			"222 == 222",
+			222,
+			true,
+		},
+		{
+			"123 != 321",
+			123,
+			false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.expect, isIntPalindrome(tt.payload))
+		})
+	}
+}
