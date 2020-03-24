@@ -571,3 +571,54 @@ func Test_isIntPalindrome(t *testing.T) {
 		})
 	}
 }
+
+func Test_BinarySearch(t *testing.T) {
+	tests := []struct {
+		name    string
+		payload []int
+		target  int
+		expect  bool
+	}{
+		{
+			"Search 3 from [1,3,5,6,10,100]",
+			[]int{1, 3, 5, 6, 10, 100},
+			3,
+			true,
+		},
+		{
+			"Search 5 from [1, 5, 6, 10, 100]",
+			[]int{1, 5, 6, 10, 100},
+			5,
+			true,
+		},
+		{
+			"Search 1 from [1]",
+			[]int{1},
+			1,
+			true,
+		},
+		{
+			"Cannot find 2 in [1,3,5,6,10,100]",
+			[]int{1, 5, 6, 10, 100},
+			2,
+			false,
+		},
+		{
+			"Cannot find 2 in [1]",
+			[]int{1},
+			2,
+			false,
+		},
+		{
+			"Search 2 from []",
+			[]int{},
+			2,
+			false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.expect, binarySearch(tt.payload, tt.target))
+		})
+	}
+}

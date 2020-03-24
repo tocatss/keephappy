@@ -494,3 +494,23 @@ func isIntPalindrome(x int) bool {
 	}
 	return false
 }
+
+func binarySearch(s []int, target int) bool {
+	if len(s) == 0 {
+		return false
+	}
+
+	start := 0
+	end := len(s) - 1
+
+	for mid := (start + end) / 2; start <= end; mid = (start + end) / 2 {
+		if target == s[mid] {
+			return true
+		} else if target > s[mid] {
+			start = mid + 1
+		} else {
+			end = mid - 1
+		}
+	}
+	return false
+}
