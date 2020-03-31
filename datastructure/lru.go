@@ -40,19 +40,24 @@ func (r *lru) Dump() []string {
 }
 
 func (r *lru) Put(k, v string) {
+	n, ok := r.cache[k]
+	if ok {
+		r.move2First(n, v)
+		return
+	}
+
 	if r.len == r.cap {
 		r.removeOne()
 		delete(r.cache, k)
-	}
-
-	n, ok := r.cache[k]
-	if !ok {
 		node := r.addOne(v)
 		r.cache[k] = node
-		r.len += 1
 		return
 	}
-	r.move2First(n, v)
+
+	node := r.addOne(v)
+	r.cache[k] = node
+	r.len++
+	return
 }
 
 func (r *lru) removeOne() {

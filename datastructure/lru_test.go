@@ -169,6 +169,17 @@ func TestLRU_Put(t *testing.T) {
 			},
 			want: []string{"1", "3", "2"},
 		},
+		{
+			name: "Creat cap:3, PUT 1,2,3,2 => 2 3 1",
+			cap:  3,
+			f: func(r *lru) {
+				r.Put("k1", "1")
+				r.Put("k2", "2")
+				r.Put("k3", "3")
+				r.Put("k2", "2")
+			},
+			want: []string{"2", "3", "1"},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

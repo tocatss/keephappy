@@ -622,3 +622,73 @@ func Test_BinarySearch(t *testing.T) {
 		})
 	}
 }
+
+func Test_MaxArea(t *testing.T) {
+	tests := []struct {
+		name    string
+		expect  int
+		payload []int
+	}{
+		{
+			name:    "[1,3,2] => 2",
+			expect:  2,
+			payload: []int{1, 3, 2},
+		},
+		{
+			name:    "[2,1,3] => 4",
+			expect:  4,
+			payload: []int{2, 1, 3},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.expect, maxArea(tt.payload))
+		})
+	}
+}
+
+func Test_trap(t *testing.T) {
+	tests := []struct {
+		name    string
+		payload []int
+		want    int
+	}{
+		{
+			name:    "[0,1,0,2,1,0,1,3,2,1,2,1] => 6 ",
+			payload: []int{0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1},
+			want:    6,
+		},
+		{
+			name:    "[4,2,3] => 1",
+			payload: []int{4, 2, 3},
+			want:    1,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, trap(tt.payload))
+		})
+	}
+}
+
+// func Test_threeSum(t *testing.T) {
+// 	tests := []struct {
+// 		name    string
+// 		payload []int
+// 		want    [][]int
+// 	}{
+// 		{
+// 			name:    "[-1, 0, 1, 2, -1, -4] =>  [-1, 0, 1] and [-1, -1, 2]",
+// 			payload: []int{-1, 0, 1, 2, -1, -4},
+// 			want: [][]int{
+// 				[]int{-1, 0, 1},
+// 				[]int{-1, -1, 2},
+// 			},
+// 		},
+// 	}
+// 	for _, tt := range tests {
+// 		t.Run(tt.name, func(t *testing.T) {
+// 			assert.ElementsMatch(t, tt.want, threeSum(tt.payload))
+// 		})
+// 	}
+// }

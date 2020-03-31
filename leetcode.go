@@ -174,9 +174,6 @@ func findPalindromeByMark(s string, mark int) string {
 	if len(s) <= mark {
 		return ""
 	}
-	if mark == 0 || mark+1 == len(s) {
-		return string(s[mark])
-	}
 
 	left := s[:mark]
 	mid := s[mark]
@@ -513,4 +510,131 @@ func binarySearch(s []int, target int) bool {
 		}
 	}
 	return false
+}
+
+// 盛最多水的容器
+// 给你 n 个非负整数 a1，a2，...，an，每个数代表坐标中的一个点 (i, ai) 。在坐标内画 n 条垂直线，垂直线 i 的两个端点分别为 (i, ai) 和 (i, 0)。找出其中的两条线，使得它们与 x 轴共同构成的容器可以容纳最多的水。
+// 输入：[1,8,6,2,5,4,8,3,7]
+// 输出：49
+func maxArea(height []int) int {
+	if len(height) < 2 {
+		return -1
+	}
+
+	left := 0
+	right := len(height) - 1
+	max := 0
+	for left != right {
+		if height[left] < height[right] {
+			area := (right - left) * height[left]
+			if area > max {
+				max = area
+			}
+			left++
+			continue
+		}
+
+		area := (right - left) * height[right]
+		if area > max {
+			max = area
+		}
+		right--
+	}
+	return max
+}
+
+// https://leetcode-cn.com/problems/trapping-rain-water/
+func trap(height []int) int {
+	if len(height) <= 2 {
+		return 0
+	}
+	result := 0
+	for left := 0; left < len(height); {
+		if height[left] == 0 || left+1 >= len(height) {
+			left++
+			continue
+		}
+
+		// so,find first heigher than left and return value,index.
+		right := -1
+		for i, v := range height[left+1:] {
+			if v >= height[left] {
+				right = left + 1 + i
+				break
+			}
+		}
+		// 515 or 516
+		if right >= 0 {
+			blockArea := height[left]
+			for i := left; i < right; i++ {
+				blockArea += 1 * height[i]
+			}
+			result += (right-left+1)*height[left] - blockArea
+			left = right
+			continue
+		}
+
+		// maybe 532 or 523, so find max of [2,3].
+		maxValue := 0
+		for i, v := range height[left+1:] {
+			if v >= maxValue {
+				maxValue = v
+				right = left + 1 + i
+			}
+		}
+
+		blockArea := maxValue
+		for i := left + 1; i <= right; i++ {
+			blockArea += 1 * height[i]
+		}
+		result += (right-left+1)*maxValue - blockArea
+		left = right
+	}
+
+	return result
+}
+
+func threeSum(nums []int) [][]int {
+	m := make(map[[3]int]interface{})
+	for i := 0; i < len(nums); i++ {
+		for j := i + 1; j < len(nums); j++ {
+			expect := 0 - nums[i] - nums[j]
+			a1 := [3]int{nums[i], nums[j], expect}
+			a2 := [3]int{nums[i], expect, nums[j]}
+			a3 := [3]int{nums[j], nums[i], expect}
+			a4 := [3]int{nums[j], expect, nums[i]}
+			a5 := [3]int{expect, nums[i], nums[j]}
+			a6 := [3]int{expect, nums[j], nums[i]}
+
+			if _, ok := m[a1]; ok {
+				continue
+			}
+			if _, ok := m[a2]; ok {
+				continue
+			}
+			if _, ok := m[a3]; ok {
+				continue
+			}
+			if _, ok := m[a4]; ok {
+				continue
+			}
+			if _, ok := m[a5]; ok {
+				continue
+			}
+			if _, ok := m[a6]; ok {
+				continue
+			}
+			for k := j + 1; k < len(nums); k++ {
+				if nums[k] == expect {
+					m[a1] = nil
+				}
+			}
+		}
+	}
+	var res [][]int
+	for k := range m {
+		kv := k
+		res = append(res, kv[:])
+	}
+	return res
 }
