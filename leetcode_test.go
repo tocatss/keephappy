@@ -671,24 +671,28 @@ func Test_trap(t *testing.T) {
 	}
 }
 
-// func Test_threeSum(t *testing.T) {
-// 	tests := []struct {
-// 		name    string
-// 		payload []int
-// 		want    [][]int
-// 	}{
-// 		{
-// 			name:    "[-1, 0, 1, 2, -1, -4] =>  [-1, 0, 1] and [-1, -1, 2]",
-// 			payload: []int{-1, 0, 1, 2, -1, -4},
-// 			want: [][]int{
-// 				[]int{-1, 0, 1},
-// 				[]int{-1, -1, 2},
-// 			},
-// 		},
-// 	}
-// 	for _, tt := range tests {
-// 		t.Run(tt.name, func(t *testing.T) {
-// 			assert.ElementsMatch(t, tt.want, threeSum(tt.payload))
-// 		})
-// 	}
-// }
+func Test_threeSum(t *testing.T) {
+	tests := []struct {
+		name    string
+		payload []int
+		want    [][]int
+	}{
+		{
+			name: `[-1, 0, 1, 2, -1, -4] 
+						=> 
+						  [-4, -1, -1, 0, 1, 2]
+						=> 
+						  [-1,-1,2],[-1,0,1]`,
+			payload: []int{-1, 0, 1, 2, -1, -4},
+			want: [][]int{
+				[]int{-1, 0, 1},
+				[]int{-1, -1, 2},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.ElementsMatch(t, tt.want, threeSum(tt.payload))
+		})
+	}
+}

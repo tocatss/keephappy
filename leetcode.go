@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"math"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -595,46 +596,56 @@ func trap(height []int) int {
 }
 
 func threeSum(nums []int) [][]int {
-	m := make(map[[3]int]interface{})
-	for i := 0; i < len(nums); i++ {
-		for j := i + 1; j < len(nums); j++ {
-			expect := 0 - nums[i] - nums[j]
-			a1 := [3]int{nums[i], nums[j], expect}
-			a2 := [3]int{nums[i], expect, nums[j]}
-			a3 := [3]int{nums[j], nums[i], expect}
-			a4 := [3]int{nums[j], expect, nums[i]}
-			a5 := [3]int{expect, nums[i], nums[j]}
-			a6 := [3]int{expect, nums[j], nums[i]}
+	if len(nums) < 3 {
+		return nil
+	}
 
-			if _, ok := m[a1]; ok {
-				continue
-			}
-			if _, ok := m[a2]; ok {
-				continue
-			}
-			if _, ok := m[a3]; ok {
-				continue
-			}
-			if _, ok := m[a4]; ok {
-				continue
-			}
-			if _, ok := m[a5]; ok {
-				continue
-			}
-			if _, ok := m[a6]; ok {
-				continue
-			}
-			for k := j + 1; k < len(nums); k++ {
-				if nums[k] == expect {
-					m[a1] = nil
+	sort.Slice(nums, func(i int, j int) bool {
+		return nums[i] < nums[j]
+	})
+
+	var res [][]int
+	for i, v := range nums {
+		if v > 0 {
+			break
+		}
+		if i > 0 && v == nums[i-1] {
+			continue
+		}
+
+		left := i + 1
+		right := len(nums) - 1
+		for left < right {
+			rv := nums[right]
+			lv := nums[left]
+			sum := v + rv + lv
+			if sum == 0 {
+				res = append(res, []int{v, lv, rv})
+				for right = right - 1; right > left; right-- {
+					if rv != nums[right] {
+						break
+					}
+				}
+				for left = left + 1; left < right; left++ {
+					if lv != nums[left] {
+						break
+					}
+				}
+			} else if sum > 0 {
+				for right = right - 1; right > left; right-- {
+					if rv != nums[right] {
+						break
+					}
+				}
+			} else {
+				for left = left + 1; left < right; left++ {
+					if lv != nums[left] {
+						break
+					}
 				}
 			}
 		}
 	}
-	var res [][]int
-	for k := range m {
-		kv := k
-		res = append(res, kv[:])
-	}
+
 	return res
 }
