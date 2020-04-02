@@ -692,7 +692,39 @@ func Test_threeSum(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.ElementsMatch(t, tt.want, threeSum(tt.payload))
+			assert.ElementsMatch(t, tt.want, ThreeSum(tt.payload))
+		})
+	}
+}
+
+func Test_letterCombinations(t *testing.T) {
+	tests := []struct {
+		name    string
+		payload string
+		want    []string
+	}{
+		{
+			name:    `23 => ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"]`,
+			payload: "23",
+			want:    []string{"ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"},
+		},
+		{
+			name:    `123 => ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"]`,
+			payload: "123",
+			want:    []string{"ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"},
+		},
+		{
+			name:    `1234 => ...`,
+			payload: "1234",
+			want: []string{"adg", "aeg", "afg", "bdg", "beg", "bfg", "cdg", "ceg", "cfg",
+				"adh", "aeh", "afh", "bdh", "beh", "bfh", "cdh", "ceh", "cfh",
+				"adi", "aei", "afi", "bdi", "bei", "bfi", "cdi", "cei", "cfi",
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.ElementsMatch(t, tt.want, LetterCombinations(tt.payload))
 		})
 	}
 }
