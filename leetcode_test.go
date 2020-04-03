@@ -728,3 +728,114 @@ func Test_letterCombinations(t *testing.T) {
 		})
 	}
 }
+
+func Test_IntToRoman(t *testing.T) {
+	tests := []struct {
+		name    string
+		payload int
+		want    string
+	}{
+		{
+			name:    "112 => CXII",
+			payload: 112,
+			want:    "CXII",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, IntToRoman(tt.payload))
+		})
+	}
+}
+
+func Test_RomanToInt(t *testing.T) {
+	tests := []struct {
+		name    string
+		payload string
+		want    int
+	}{
+		{
+			name:    "CXII => 112",
+			payload: "CXII",
+			want:    112,
+		},
+		{
+			name:    "XLI => 41",
+			payload: "XLI",
+			want:    41,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, RomanToInt(tt.payload))
+		})
+	}
+}
+
+func Test_LongestCommonPrefix(t *testing.T) {
+	tests := []struct {
+		name    string
+		payload []string
+		want    string
+	}{
+		{
+			name:    "[ab, abc] => ab",
+			payload: []string{"ab", "abc"},
+			want:    "ab",
+		},
+		{
+			name:    "[abc, ab] => ab",
+			payload: []string{"abc", "ab"},
+			want:    "ab",
+		},
+		{
+			name:    "[ab, abc,c] => ab",
+			payload: []string{"ab", "abc", "c"},
+			want:    "",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, LongestCommonPrefix(tt.payload))
+		})
+	}
+}
+
+func Test_ThreeSumClosest(t *testing.T) {
+	tests := []struct {
+		name    string
+		payload []int
+		target  int
+		want    int
+	}{
+		{
+			name:    `target 5 of [-1, 0, 1, 2]  => [0,1,2]`,
+			payload: []int{-1, 0, 1, 2},
+			target:  5,
+			want:    3,
+		},
+		{
+			name:    `target 1 of [-1，2，1，-4]  => [-1,2,1]`,
+			payload: []int{-4, -1, 2, 1, -4},
+			target:  1,
+			want:    2,
+		},
+		{
+			name:    `target 0 of [0,0,0]  => [0,0,0]`,
+			payload: []int{0, 0, 0},
+			target:  1,
+			want:    0,
+		},
+		{
+			name:    `target 82 of [1,2,4,8,16,32,64,128]  => [2,16,64]`,
+			payload: []int{1, 2, 4, 8, 16, 32, 64, 128},
+			target:  82,
+			want:    82,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, ThreeSumClosest(tt.payload, tt.target))
+		})
+	}
+}

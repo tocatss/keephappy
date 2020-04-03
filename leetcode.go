@@ -682,3 +682,106 @@ func LetterCombinations(digits string) []string {
 	}
 	return res
 }
+
+func IntToRoman(num int) string {
+	nums := []int{1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1}
+	romas := []string{"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"}
+
+	var sb strings.Builder
+	for i, n := range nums {
+		for v := num / n; v > 0; v-- {
+			sb.WriteString(romas[i])
+		}
+		num = num % n
+	}
+	return sb.String()
+}
+
+func RomanToInt(s string) int {
+	m := map[byte]int{
+		'M': 1000,
+		'D': 500,
+		'C': 100,
+		'L': 50,
+		'X': 10,
+		'V': 5,
+		'I': 1,
+	}
+	var res int
+	for i := 0; i < len(s); i++ {
+		if i+1 < len(s) && m[s[i+1]] > m[s[i]] {
+			res += m[s[i+1]] - m[s[i]]
+			i++
+			continue
+		}
+		res += m[s[i]]
+	}
+	return res
+}
+
+func LongestCommonPrefix(strs []string) string {
+	if len(strs) == 0 {
+		return ""
+	}
+	if len(strs) == 1 {
+		return strs[0]
+	}
+
+	res := strs[0]
+	for _, v := range strs {
+		var sb strings.Builder
+		for i := 0; i < len(res) && i < len(v); i++ {
+			if res[i] != v[i] {
+				break
+			}
+			sb.WriteByte(res[i])
+		}
+		res = sb.String()
+	}
+	return res
+}
+
+// TODO: not pass.
+func ThreeSumClosest(nums []int, target int) int {
+	if len(nums) < 3 {
+		return 0
+	}
+
+	sort.Slice(nums, func(i, j int) bool {
+		return nums[i] < nums[j]
+	})
+	res := nums[0] + nums[1] + nums[2]
+
+	for start := 0; start < len(nums) && nums[start] <= target; start++ {
+		left := start + 1
+		right := len(nums) - 1
+		for left < right {
+			sum := nums[start] + nums[left] + nums[right]
+			if sum > target {
+				res = findNearlyTarget(target, res, sum)
+				right--
+			} else if sum < target {
+				res = findNearlyTarget(target, res, sum)
+				left++
+			} else {
+				return target
+			}
+		}
+	}
+	return res
+}
+
+func findNearlyTarget(target, a, b int) int {
+	aa := target - a
+	bb := target - b
+	if aa < 0 {
+		aa = 0 - aa
+	}
+	if bb < 0 {
+		bb = 0 - bb
+	}
+	if aa < bb {
+		return a
+	}
+	return b
+}
