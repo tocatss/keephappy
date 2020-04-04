@@ -741,7 +741,6 @@ func LongestCommonPrefix(strs []string) string {
 	return res
 }
 
-// TODO: not pass.
 func ThreeSumClosest(nums []int, target int) int {
 	if len(nums) < 3 {
 		return 0
@@ -752,7 +751,7 @@ func ThreeSumClosest(nums []int, target int) int {
 	})
 	res := nums[0] + nums[1] + nums[2]
 
-	for start := 0; start < len(nums) && nums[start] <= target; start++ {
+	for start := 0; start < len(nums); start++ {
 		left := start + 1
 		right := len(nums) - 1
 		for left < right {
@@ -780,8 +779,59 @@ func findNearlyTarget(target, a, b int) int {
 	if bb < 0 {
 		bb = 0 - bb
 	}
-	if aa < bb {
+	if aa <= bb {
 		return a
 	}
 	return b
+}
+
+func FourSum(nums []int, target int) [][]int {
+	sort.Slice(nums, func(i, j int) bool {
+		return nums[i] < nums[j]
+	})
+	var res [][]int
+	for i := 0; i < len(nums); {
+		for j := i + 1; j < len(nums); {
+			left := j + 1
+			right := len(nums) - 1
+			expect := target - nums[i] - nums[j]
+			for left < right {
+				if expect > nums[left]+nums[right] {
+					left = findNextLeft(nums, left, right)
+				} else if expect < nums[left]+nums[right] {
+					right = findNextRight(nums, left, right)
+				} else {
+					res = append(res, []int{nums[i], nums[j], nums[left], nums[right]})
+					left = findNextLeft(nums, left, right)
+					right = findNextRight(nums, left, right)
+				}
+			}
+			j = findNextLeft(nums, j, len(nums))
+		}
+		i = findNextLeft(nums, i, len(nums))
+
+	}
+	return res
+}
+
+func findNextRight(nums []int, left, right int) int {
+	right--
+	for left < right {
+		if nums[right] != nums[right+1] {
+			break
+		}
+		right--
+	}
+	return right
+}
+
+func findNextLeft(nums []int, left, right int) int {
+	left++
+	for left < right {
+		if nums[left] != nums[left-1] {
+			break
+		}
+		left++
+	}
+	return left
 }

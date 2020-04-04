@@ -815,10 +815,10 @@ func Test_ThreeSumClosest(t *testing.T) {
 			want:    3,
 		},
 		{
-			name:    `target 1 of [-1，2，1，-4]  => [-1,2,1]`,
-			payload: []int{-4, -1, 2, 1, -4},
-			target:  1,
-			want:    2,
+			name:    `target 1 of [-10,-4,-1,-1,2,1,4,5,9]  => [-1,2,1]`,
+			payload: []int{-10, -4, -1, -1, 2, 1, 4, 5, 9},
+			target:  17,
+			want:    16,
 		},
 		{
 			name:    `target 0 of [0,0,0]  => [0,0,0]`,
@@ -826,16 +826,55 @@ func Test_ThreeSumClosest(t *testing.T) {
 			target:  1,
 			want:    0,
 		},
-		{
-			name:    `target 82 of [1,2,4,8,16,32,64,128]  => [2,16,64]`,
-			payload: []int{1, 2, 4, 8, 16, 32, 64, 128},
-			target:  82,
-			want:    82,
-		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			assert.Equal(t, tt.want, ThreeSumClosest(tt.payload, tt.target))
+		})
+	}
+}
+
+func Test_FourSum(t *testing.T) {
+	tests := []struct {
+		name    string
+		payload []int
+		target  int
+		want    [][]int
+	}{
+		{
+			name:    "nums = [1, 0, -1, 0, -2, 2] and target = 0",
+			payload: []int{1, 0, -1, -1, 0, -2, 2, -2},
+			target:  0,
+			want: [][]int{
+				[]int{-1, 0, 0, 1},
+				[]int{-2, -1, 1, 2},
+				[]int{-2, 0, 0, 2},
+				[]int{-1, -1, 0, 2},
+			},
+		},
+		{
+			name:    "nums = [0,0,4,-2,-3,-2,-2,-3] and target = -1",
+			payload: []int{0, 0, 4, -2, -3, -2, -2, -3},
+			target:  -1,
+			want: [][]int{
+				[]int{-3, -2, 0, 4},
+			},
+		},
+		{
+			name:    "nums = [-1,0,-5,-2,-2,-4,0,1,-2] and target = -9",
+			payload: []int{-1, 0, -5, -2, -2, -4, 0, 1, -2},
+			target:  -9,
+			want: [][]int{
+				[]int{-5, -4, -1, 1},
+				[]int{-5, -4, 0, 0},
+				[]int{-5, -2, -2, 0},
+				[]int{-4, -2, -2, -1},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.ElementsMatch(t, tt.want, FourSum(tt.payload, tt.target))
 		})
 	}
 }
