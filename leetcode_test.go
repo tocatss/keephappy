@@ -878,3 +878,51 @@ func Test_FourSum(t *testing.T) {
 		})
 	}
 }
+
+func Test_RemoveNthFromEnd(t *testing.T) {
+	tests := []struct {
+		name string
+		head *ListNode
+		n    int
+		want *ListNode
+	}{
+		{
+			name: "1->2->3->4->5 and n = 2 => 1->2->3->5",
+			head: &ListNode{
+				Val: 1,
+				Next: &ListNode{
+					Val: 2,
+					Next: &ListNode{
+						Val: 3,
+						Next: &ListNode{
+							Val: 4,
+							Next: &ListNode{
+								Val:  5,
+								Next: nil,
+							},
+						},
+					},
+				},
+			},
+			n: 2,
+			want: &ListNode{
+				Val: 1,
+				Next: &ListNode{
+					Val: 2,
+					Next: &ListNode{
+						Val: 3,
+						Next: &ListNode{
+							Val:  5,
+							Next: nil,
+						},
+					},
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, RemoveNthFromEnd(tt.head, tt.n))
+		})
+	}
+}

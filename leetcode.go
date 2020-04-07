@@ -835,3 +835,20 @@ func findNextLeft(nums []int, left, right int) int {
 	}
 	return left
 }
+
+// 给定一个链表，删除链表的倒数第 n 个节点，并且返回链表的头结点。
+// 遍历一次，双指针法.
+func RemoveNthFromEnd(head *ListNode, n int) *ListNode {
+	dummyNode := &ListNode{Next: head}
+	p := dummyNode
+	for i, node := 0, head; node != nil; i, node = i+1, node.Next {
+		if i >= n {
+			p = p.Next
+		}
+	}
+
+	willDeleteNode := p.Next
+	p.Next = willDeleteNode.Next
+
+	return dummyNode.Next
+}
