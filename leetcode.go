@@ -852,3 +852,34 @@ func RemoveNthFromEnd(head *ListNode, n int) *ListNode {
 
 	return dummyNode.Next
 }
+
+func mergeTwoLists(l1 *ListNode, l2 *ListNode) *ListNode {
+	var (
+		dummy   *ListNode = &ListNode{}
+		crtNode *ListNode = dummy
+	)
+
+	for l1 != nil || l2 != nil {
+		if l1 == nil {
+			crtNode.Next = l2
+			l2 = nil
+			break
+		}
+		if l2 == nil {
+			crtNode.Next = l1
+			l1 = nil
+			break
+		}
+
+		if l1.Val < l2.Val {
+			crtNode.Next = &ListNode{Val: l1.Val}
+			l1 = l1.Next
+			crtNode = crtNode.Next
+			continue
+		}
+		crtNode.Next = &ListNode{Val: l2.Val}
+		l2 = l2.Next
+		crtNode = crtNode.Next
+	}
+	return dummy.Next
+}
