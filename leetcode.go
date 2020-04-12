@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"container/heap"
 	"errors"
 	"math"
 	"sort"
@@ -881,5 +882,56 @@ func mergeTwoLists(l1 *ListNode, l2 *ListNode) *ListNode {
 		l2 = l2.Next
 		crtNode = crtNode.Next
 	}
+	return dummy.Next
+}
+
+type nsHead []*ListNode
+
+func (h nsHead) Len() int {
+	return len(h)
+}
+
+func (h nsHead) Swap(i, j int) {
+	h[i], h[j] = h[j], h[i]
+}
+
+func (h nsHead) Less(i, j int) bool {
+	return h[i].Val < h[j].Val
+}
+
+func (h *nsHead) Push(x interface{}) {
+	*h = append(*h, x.(*ListNode))
+}
+
+func (h *nsHead) Pop() interface{} {
+	old := *h
+	n := len(old)
+	item := old[n-1]
+	*h = old[0 : n-1]
+	return item
+}
+
+func mergeKLists(lists []*ListNode) *ListNode {
+	ns := make(nsHead, 0, len(lists))
+	for _, n := range lists {
+		if n != nil {
+			ns = append(ns, n)
+		}
+	}
+
+	h := &ns
+	heap.Init(h)
+	dummy := &ListNode{}
+	crt := dummy
+	for h.Len() > 0 {
+		item := heap.Pop(h)
+		node := item.(*ListNode)
+		crt.Next = node
+		crt = node
+		if node.Next != nil {
+			heap.Push(h, node.Next)
+		}
+	}
+
 	return dummy.Next
 }
