@@ -971,3 +971,37 @@ func printLink(l *ListNode) {
 	}
 	log.Print(res)
 }
+
+func reverseKGroup(head *ListNode, k int) *ListNode {
+	var (
+		hasLenKAfterHead func(head *ListNode) bool = func(head *ListNode) bool {
+			crt := head.Next
+			for kk := k; kk > 0; kk-- {
+				if crt == nil {
+					return false
+				}
+				crt = crt.Next
+			}
+			return true
+		}
+		move2Head func(head *ListNode, times int) *ListNode = func(head *ListNode, times int) *ListNode {
+			crt := head.Next
+			for ; times > 0; times-- {
+				next := crt.Next
+				crt.Next = next.Next
+				next.Next = head.Next
+				head.Next = next
+			}
+			return crt
+		}
+	)
+
+	// 1->2->3->4
+	// k=2 2->1->4->3
+	dummy := &ListNode{Next: head}
+	p := dummy
+	for hasLenKAfterHead(p) {
+		p = move2Head(p, k-1)
+	}
+	return dummy.Next
+}

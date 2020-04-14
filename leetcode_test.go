@@ -999,3 +999,74 @@ func Test_mergeKLists(t *testing.T) {
 		})
 	}
 }
+
+func Test_reverseKGroup(t *testing.T) {
+	tests := []struct {
+		name    string
+		payload *ListNode
+		k       int
+		want    *ListNode
+	}{
+		{
+			name: "k=2,1->2->3->4 => 2->1->4->3",
+			payload: &ListNode{
+				Val: 1,
+				Next: &ListNode{
+					Val: 2,
+					Next: &ListNode{
+						Val: 3,
+						Next: &ListNode{
+							Val: 4,
+						},
+					},
+				},
+			},
+			k: 2,
+			want: &ListNode{
+				Val: 2,
+				Next: &ListNode{
+					Val: 1,
+					Next: &ListNode{
+						Val: 4,
+						Next: &ListNode{
+							Val: 3,
+						},
+					},
+				},
+			},
+		},
+		{
+			name: "k=3,1->2->3->4 => 3->2->1->4",
+			payload: &ListNode{
+				Val: 1,
+				Next: &ListNode{
+					Val: 2,
+					Next: &ListNode{
+						Val: 3,
+						Next: &ListNode{
+							Val: 4,
+						},
+					},
+				},
+			},
+			k: 3,
+			want: &ListNode{
+				Val: 3,
+				Next: &ListNode{
+					Val: 2,
+					Next: &ListNode{
+						Val: 1,
+						Next: &ListNode{
+							Val: 4,
+						},
+					},
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, reverseKGroup(tt.payload, tt.k))
+		})
+	}
+}
