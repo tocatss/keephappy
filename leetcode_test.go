@@ -926,3 +926,76 @@ func Test_RemoveNthFromEnd(t *testing.T) {
 		})
 	}
 }
+
+func Test_mergeKLists(t *testing.T) {
+	tests := []struct {
+		name    string
+		payload []*ListNode
+		want    *ListNode
+	}{
+		{
+			name: "merge [1,2,3] [2,3,4] [3,4,5] => [1,2,2,3,3,3,4,4,5]",
+			payload: []*ListNode{
+				{
+					Val: 1,
+					Next: &ListNode{
+						Val: 2,
+						Next: &ListNode{
+							Val: 3,
+						},
+					},
+				},
+				{
+					Val: 2,
+					Next: &ListNode{
+						Val: 3,
+						Next: &ListNode{
+							Val: 4,
+						},
+					},
+				},
+				{
+					Val: 3,
+					Next: &ListNode{
+						Val: 4,
+						Next: &ListNode{
+							Val: 5,
+						},
+					},
+				},
+			},
+			want: &ListNode{
+				Val: 1,
+				Next: &ListNode{
+					Val: 2,
+					Next: &ListNode{
+						Val: 2,
+						Next: &ListNode{
+							Val: 3,
+							Next: &ListNode{
+								Val: 3,
+								Next: &ListNode{
+									Val: 3,
+									Next: &ListNode{
+										Val: 4,
+										Next: &ListNode{
+											Val: 4,
+											Next: &ListNode{
+												Val: 5,
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, mergeKLists(tt.payload))
+		})
+	}
+}

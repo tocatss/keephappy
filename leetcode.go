@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"container/heap"
 	"errors"
+	"log"
 	"math"
 	"sort"
 	"strconv"
@@ -912,6 +913,32 @@ func (h *nsHead) Pop() interface{} {
 }
 
 func mergeKLists(lists []*ListNode) *ListNode {
+	// if len(lists) == 0 {
+	// 	return nil
+	// }
+	// var mergeK func(ns []*ListNode, start, end int) *ListNode
+	// mergeK = func(ns []*ListNode, start, end int) *ListNode {
+	// 	if start+1 >= end {
+	// 		return ns[start]
+	// 	}
+	// 	if start+2 >= end {
+	// 		return mergeTwoLists(ns[start], ns[start+1])
+	// 	}
+	// 	mid := (end - start) / 2
+	// 	return mergeTwoLists(mergeK(ns, start, mid), mergeK(ns, mid, end))
+	// }
+	// return mergeK(lists, 0, len(lists))
+
+	// ANOTHER..
+	// if len(lists) == 0 {
+	// 	return nil
+	// }
+	// res := lists[0]
+	// for i := 1; i < len(lists); i++ {
+	// 	res = mergeTwoLists(res, lists[i])
+	// 	printLink(res)
+	// }
+	// return res
 	ns := make(nsHead, 0, len(lists))
 	for _, n := range lists {
 		if n != nil {
@@ -934,4 +961,13 @@ func mergeKLists(lists []*ListNode) *ListNode {
 	}
 
 	return dummy.Next
+}
+
+func printLink(l *ListNode) {
+	var res []int
+	for l != nil {
+		res = append(res, l.Val)
+		l = l.Next
+	}
+	log.Print(res)
 }
