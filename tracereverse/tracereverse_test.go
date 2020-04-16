@@ -13,7 +13,7 @@ func Test_Permute(t *testing.T) {
 		want    [][]int
 	}{
 		{
-			name:    "trace reverse",
+			name:    "1,2,3 => 3!",
 			payload: []int{1, 2, 3},
 			want: [][]int{
 				{1, 2, 3},
@@ -32,7 +32,6 @@ func Test_Permute(t *testing.T) {
 	}
 }
 
-// TODO: not complete.
 func Test_PermuteUnique(t *testing.T) {
 	tests := []struct {
 		name    string
@@ -40,15 +39,21 @@ func Test_PermuteUnique(t *testing.T) {
 		want    [][]int
 	}{
 		{
-			name:    "trace reverse",
+			name:    "unique",
 			payload: []int{1, 1, 2},
 			want: [][]int{
-				{1, 2, 3},
-				{1, 3, 2},
-				{2, 3, 1},
-				{2, 1, 3},
-				{3, 2, 1},
-				{3, 1, 2},
+				{1, 1, 2},
+				{1, 2, 1},
+				{2, 1, 1},
+			},
+		},
+		{
+			name:    "unique",
+			payload: []int{1, 2, 1},
+			want: [][]int{
+				{1, 1, 2},
+				{1, 2, 1},
+				{2, 1, 1},
 			},
 		},
 	}

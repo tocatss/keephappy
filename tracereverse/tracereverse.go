@@ -3,17 +3,17 @@
 package tracereverse
 
 import (
-	"log"
 	"reflect"
+	"sort"
 )
 
 func Permute(nums []int) [][]int {
-	stack := make(intStack, 0)
 	var (
-		res [][]int
-		dfs func(visited map[int]bool, stack *intStack)
+		res   [][]int
+		dfs   func(visited map[int]interface{}, stack *intStack)
+		stack = make(intStack, 0)
 	)
-	dfs = func(visited map[int]bool, stack *intStack) {
+	dfs = func(visited map[int]interface{}, stack *intStack) {
 		if len(*stack) == len(nums) {
 			copied := make(intStack, len(*stack))
 			copy(copied, *stack)
@@ -32,27 +32,23 @@ func Permute(nums []int) [][]int {
 		}
 	}
 
-	visited := make(map[int]bool)
-	for _, v := range nums {
-		visited[v] = true
-		stack.push(v)
-		dfs(visited, &stack)
-		delete(visited, v)
-		_ = stack.pop()
-	}
+	visited := make(map[int]interface{})
+	dfs(visited, &stack)
 
 	return res
 }
 
-// TODO: not complete.
 func PermuteUnique(nums []int) [][]int {
 	var (
-		ans      [][]int
-		dfs      func(visisted []bool, path *intStack)
-		visisted = make([]bool, len(nums))
+		ans     [][]int
+		dfs     func(visited []bool, path *intStack)
+		visited = make([]bool, len(nums))
+		path    = make(intStack, 0, len(nums))
 	)
 
-	dfs = func(visisted []bool, path *intStack) {
+	sort.Sort(intSortable(nums))
+
+	dfs = func(visited []bool, path *intStack) {
 		if path.len() == len(nums) {
 			c := path.copy()
 			ans = append(ans, *c)
@@ -60,7 +56,7 @@ func PermuteUnique(nums []int) [][]int {
 		}
 		copiedPath := path.copy()
 		for i, v := range nums {
-			if visisted[i] {
+			if visited[i] {
 				continue
 			}
 			path.push(v)
@@ -68,31 +64,19 @@ func PermuteUnique(nums []int) [][]int {
 				_ = path.pop()
 				continue
 			}
-			visisted[i] = true
+			visited[i] = true
 
-			dfs(visisted, path)
+			dfs(visited, path)
 
 			copiedPath = path.copy()
-			visisted[i] = false
+			visited[i] = false
 			_ = path.pop()
 		}
 	}
 
-	for i, v := range nums {
-		if i > 0 && nums[i] == nums[i-1] {
-			continue
-		}
-		path := make(intStack, 0, len(nums))
-		visisted[i] = true
-		path.push(v)
+	dfs(visited, &path)
 
-		dfs(visisted, &path)
-
-		visisted[i] = false
-		path.pop()
-	}
-	log.Print(ans)
-	return nil
+	return ans
 }
 
 type intStack []int
@@ -119,3 +103,9 @@ func (s *intStack) copy() *intStack {
 	copy(copied, *s)
 	return &copied
 }
+
+type intSortable []int
+
+func (s intSortable) Len() int           { return len(s) }
+func (s intSortable) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
+func (s intSortable) Less(i, j int) bool { return s[i] < s[j] }
