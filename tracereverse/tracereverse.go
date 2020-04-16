@@ -7,6 +7,44 @@ import (
 	"sort"
 )
 
+type intStack []int
+
+func (s *intStack) push(item int) {
+	*s = append(*s, item)
+}
+func (s *intStack) pop() int {
+	ss := *s
+	if len(ss) == 0 {
+		return 0
+	}
+	*s = ss[0 : len(ss)-1]
+	return ss[len(ss)-1]
+}
+func (s *intStack) equal(target *intStack) bool {
+	return reflect.DeepEqual(*s, *target)
+}
+func (s *intStack) len() int {
+	return len(*s)
+}
+func (s *intStack) copy() *intStack {
+	copied := make(intStack, len(*s))
+	copy(copied, *s)
+	return &copied
+}
+func (s *intStack) sum() int {
+	sum := 0
+	for _, v := range *s {
+		sum += v
+	}
+	return sum
+}
+
+type intSortable []int
+
+func (s intSortable) Len() int           { return len(s) }
+func (s intSortable) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
+func (s intSortable) Less(i, j int) bool { return s[i] < s[j] }
+
 func Permute(nums []int) [][]int {
 	var (
 		res   [][]int
@@ -79,33 +117,40 @@ func PermuteUnique(nums []int) [][]int {
 	return ans
 }
 
-type intStack []int
+func CombinationSum(candidates []int, target int) [][]int {
+	var (
+		ans  [][]int
+		dfs  func(s *intStack, index int) bool
+		path = make(intStack, 0, len(candidates))
+	)
 
-func (s *intStack) push(item int) {
-	*s = append(*s, item)
-}
-func (s *intStack) pop() int {
-	ss := *s
-	if len(ss) == 0 {
-		return 0
+	sort.Sort(intSortable(candidates))
+
+	dfs = func(path *intStack, index int) bool {
+		if path.sum() == target {
+			c := path.copy()
+			ans = append(ans, *c)
+			// break outer loop.
+			return true
+		}
+		if path.sum() > target {
+			// break outer loop.
+			return true
+		}
+
+		for i := index; i < len(candidates); i++ {
+			path.push(candidates[i])
+			isBreak := dfs(path, i)
+			_ = path.pop()
+			if isBreak {
+				// only break this loop
+				return false
+			}
+		}
+		return false
 	}
-	*s = ss[0 : len(ss)-1]
-	return ss[len(ss)-1]
-}
-func (s *intStack) equal(target *intStack) bool {
-	return reflect.DeepEqual(*s, *target)
-}
-func (s *intStack) len() int {
-	return len(*s)
-}
-func (s *intStack) copy() *intStack {
-	copied := make(intStack, len(*s))
-	copy(copied, *s)
-	return &copied
-}
 
-type intSortable []int
+	dfs(&path, 0)
 
-func (s intSortable) Len() int           { return len(s) }
-func (s intSortable) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
-func (s intSortable) Less(i, j int) bool { return s[i] < s[j] }
+	return ans
+}

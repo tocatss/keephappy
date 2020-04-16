@@ -63,3 +63,28 @@ func Test_PermuteUnique(t *testing.T) {
 		})
 	}
 }
+
+func Test_CombinationSum(t *testing.T) {
+	tests := []struct {
+		name       string
+		candidates []int
+		target     int
+		want       [][]int
+	}{
+		{
+			name:       "candidates = [2,3,5], target = 8",
+			candidates: []int{2, 3, 5},
+			target:     8,
+			want: [][]int{
+				{2, 2, 2, 2},
+				{2, 3, 3},
+				{3, 5},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.ElementsMatch(t, tt.want, CombinationSum(tt.candidates, tt.target))
+		})
+	}
+}
