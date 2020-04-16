@@ -1,6 +1,6 @@
 // Package: tracereverse is some practice from
 // https://liweiwei1419.gitee.io/leetcode-algo/leetcode-by-tag/backtracking/0046-permutations.html
-package tracereverse
+package backtrack
 
 import (
 	"reflect"
