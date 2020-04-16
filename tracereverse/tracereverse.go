@@ -154,3 +154,44 @@ func CombinationSum(candidates []int, target int) [][]int {
 
 	return ans
 }
+
+// TODO: 修改判断相等的时间点.
+func CombinationSum2(candidates []int, target int) [][]int {
+	var (
+		ans  = make([][]int, 0)
+		path = make(intStack, 0, len(candidates))
+		dfs  func(path *intStack, index int) bool
+	)
+
+	dfs = func(path *intStack, index int) bool {
+		sum := path.sum()
+		if sum == target {
+			c := path.copy()
+			ans = append(ans, *c)
+			return true
+		}
+		if sum > target {
+			return true
+		}
+
+		lastPath := path.copy()
+		for i := index; i < len(candidates); i++ {
+			path.push(candidates[i])
+			if path.equal(lastPath) {
+				_ = path.pop()
+				continue
+			}
+
+			isBreak := dfs(path, i+1)
+			lastPath = path.copy()
+			_ = path.pop()
+			if isBreak {
+				return false
+			}
+		}
+		return false
+	}
+	sort.Sort(intSortable(candidates))
+	_ = dfs(&path, 0)
+	return ans
+}
