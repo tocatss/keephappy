@@ -76,6 +76,8 @@ func Permute(nums []int) [][]int {
 	return res
 }
 
+// TODO: 修改判断相等的时间点.
+
 func PermuteUnique(nums []int) [][]int {
 	var (
 		ans     [][]int
@@ -155,7 +157,6 @@ func CombinationSum(candidates []int, target int) [][]int {
 	return ans
 }
 
-// TODO: 修改判断相等的时间点.
 func CombinationSum2(candidates []int, target int) [][]int {
 	var (
 		ans  = make([][]int, 0)
@@ -174,16 +175,13 @@ func CombinationSum2(candidates []int, target int) [][]int {
 			return true
 		}
 
-		lastPath := path.copy()
 		for i := index; i < len(candidates); i++ {
-			path.push(candidates[i])
-			if path.equal(lastPath) {
-				_ = path.pop()
+			if i > index && candidates[i] == candidates[i-1] {
 				continue
 			}
 
+			path.push(candidates[i])
 			isBreak := dfs(path, i+1)
-			lastPath = path.copy()
 			_ = path.pop()
 			if isBreak {
 				return false
