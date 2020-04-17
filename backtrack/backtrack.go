@@ -94,23 +94,22 @@ func PermuteUnique(nums []int) [][]int {
 			ans = append(ans, *c)
 			return
 		}
-		copiedPath := path.copy()
+		lastVistited := -10000
 		for i, v := range nums {
 			if visited[i] {
 				continue
 			}
-			path.push(v)
-			if path.equal(copiedPath) {
-				_ = path.pop()
+			if nums[i] == lastVistited {
 				continue
 			}
+			path.push(v)
 			visited[i] = true
 
 			dfs(visited, path)
 
-			copiedPath = path.copy()
 			visited[i] = false
 			_ = path.pop()
+			lastVistited = nums[i]
 		}
 	}
 

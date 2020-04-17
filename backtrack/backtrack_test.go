@@ -56,6 +56,12 @@ func Test_PermuteUnique(t *testing.T) {
 				{2, 1, 1},
 			},
 		},
+		// 	1122
+		// 	1
+		//   11     12
+		//  112 x112 121 x121 122
+		// 1122     1211
+
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
