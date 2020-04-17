@@ -76,8 +76,6 @@ func Permute(nums []int) [][]int {
 	return res
 }
 
-// TODO: 修改判断相等的时间点.
-
 func PermuteUnique(nums []int) [][]int {
 	var (
 		ans     [][]int
@@ -191,4 +189,63 @@ func CombinationSum2(candidates []int, target int) [][]int {
 	sort.Sort(intSortable(candidates))
 	_ = dfs(&path, 0)
 	return ans
+}
+
+func GenerateParenthesis(n int) []string {
+	var (
+		ans     = make([]string, 0)
+		visited = make([]bool, n*2)
+		data    = make([]string, n*2)
+		path    string
+		dfs     func(path string, visited []bool, left, right int)
+	)
+	for i := 0; i < n; i++ {
+		data[i] = "("
+		data[n*2-i-1] = ")"
+	}
+
+	dfs = func(path string, visited []bool, left, right int) {
+		if len(path) == n*2 {
+			ans = append(ans, path)
+			return
+		}
+		lastVisited := "-"
+		for i, v := range data {
+			if visited[i] {
+				continue
+			}
+			// Skip same item.
+			if v == lastVisited {
+				continue
+			}
+			// Skip illegal item.
+			if v == ")" {
+				if left < right+1 {
+					continue
+				}
+				right++
+			} else {
+				left++
+			}
+
+			lastVisited = v
+			visited[i] = true
+			path = path + v
+			dfs(path, visited, left, right)
+
+			// Back.
+			if v == ")" {
+				right--
+			} else {
+				left--
+			}
+			visited[i] = false
+			path = path[:len(path)-1]
+		}
+	}
+
+	dfs(path, visited, 0, 0)
+
+	return ans
+
 }

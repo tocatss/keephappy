@@ -137,3 +137,27 @@ func Test_CombinationSum2(t *testing.T) {
 		})
 	}
 }
+
+func Test_GenerateParenthesis(t *testing.T) {
+	tests := []struct {
+		name string
+		n    int
+		want []string
+	}{
+		{
+			name: "n=2 ()",
+			n:    2,
+			want: []string{"(())", "()()"},
+		},
+		{
+			name: "n=3 ()",
+			n:    3,
+			want: []string{"((()))", "(()())", "(())()", "()(())", "()()()"},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.ElementsMatch(t, tt.want, GenerateParenthesis(tt.n))
+		})
+	}
+}
