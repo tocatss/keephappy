@@ -1005,3 +1005,77 @@ func reverseKGroup(head *ListNode, k int) *ListNode {
 	}
 	return dummy.Next
 }
+
+func RemoveDuplicates(nums []int) int {
+	// var (
+	// 	ans       int
+	// 	move2Tail func(index int)
+	// )
+	// move2Tail = func(index int) {
+	// 	v := nums[index]
+	// 	for j := index + 1; j < len(nums); j++ {
+	// 		nums[j-1] = nums[j]
+	// 	}
+	// 	nums[len(nums)-1] = v
+	// }
+
+	// for i, j := 0, 0; i < len(nums) && j < len(nums); {
+	// 	if i > 0 && nums[i] == nums[i-1] {
+	// 		move2Tail(i)
+	// 		j++
+	// 		continue
+	// 	}
+	// 	if i > 0 && nums[i] < nums[i-1] {
+	// 		break
+	// 	}
+	// 	ans++
+	// 	i++
+	// }
+	// return ans
+	if len(nums) <= 1 {
+		return len(nums)
+	}
+
+	p, q := 0, 1
+	for q < len(nums) {
+		if nums[p] == nums[q] {
+			q++
+			continue
+		}
+		nums[p+1] = nums[q]
+		p++
+		q++
+	}
+
+	return p + 1
+}
+
+func RemoveElement(nums []int, val int) int {
+	var p, q int
+	for q < len(nums) {
+		if nums[q] == val {
+			q++
+			continue
+		}
+		nums[p] = nums[q]
+		p++
+		q++
+	}
+	return p
+}
+
+func MoveZeroes(nums []int) {
+	var q, p int
+	for q < len(nums) {
+		if nums[q] == 0 {
+			q++
+			continue
+		}
+		nums[p] = nums[q]
+		if q > p {
+			nums[q] = 0
+		}
+		p++
+		q++
+	}
+}

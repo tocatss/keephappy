@@ -1070,3 +1070,84 @@ func Test_reverseKGroup(t *testing.T) {
 		})
 	}
 }
+
+func Test_RemoveDuplicates(t *testing.T) {
+	tests := []struct {
+		name string
+		nums []int
+		want int
+	}{
+		{
+			name: "112234 => 1234 => 4",
+			nums: []int{1, 1, 2, 2, 3, 4},
+			want: 4,
+		},
+		{
+			name: "12222 => 12 => 2",
+			nums: []int{1, 2, 2, 2, 2},
+			want: 2,
+		},
+		{
+			name: "1 => 1 => 1",
+			nums: []int{1},
+			want: 1,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, RemoveDuplicates(tt.nums))
+		})
+	}
+}
+
+func Test_RemoveElement(t *testing.T) {
+	tests := []struct {
+		name   string
+		nums   []int
+		target int
+		want   int
+	}{
+		{
+			name:   "112234,target=2 => 1134",
+			target: 2,
+			nums:   []int{1, 1, 2, 2, 3, 4},
+			want:   4,
+		},
+		{
+			name:   "12222, target=1 => 2222",
+			target: 1,
+			nums:   []int{1, 2, 2, 2, 2},
+			want:   4,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, RemoveElement(tt.nums, tt.target))
+		})
+	}
+}
+
+func Test_MoveZeroes(t *testing.T) {
+	tests := []struct {
+		name string
+		nums []int
+		want []int
+	}{
+		{
+			name: "011002 =>112",
+			nums: []int{0, 1, 1, 0, 0, 2},
+			want: []int{1, 1, 2, 0, 0, 0},
+		},
+		{
+			name: "1010010020 =>1112",
+			nums: []int{1, 0, 1, 0, 0, 1, 0, 0, 2, 0},
+			want: []int{1, 1, 1, 2, 0, 0, 0, 0, 0, 0},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			MoveZeroes(tt.nums)
+			assert.Equal(t, tt.want, tt.nums)
+		})
+	}
+}
