@@ -1101,3 +1101,57 @@ func RemoveDuplicates2(nums []int) int {
 	}
 	return q
 }
+
+// func Divide(dividend int, divisor int) int {
+// 	if dividend == 0 {
+// 		return 0
+// 	}
+
+// 	var (
+// 		divide func(dividend int, divisor int)
+// 		mark   bool
+// 		ans    int
+// 	)
+// 	if dividend < 0 && divisor < 0 {
+// 		dividend = 0 - dividend
+// 		divisor = 0 - divisor
+// 	} else if dividend < 0 {
+// 		dividend = 0 - dividend
+// 		mark = true
+// 	} else if divisor < 0 {
+// 		divisor = 0 - divisor
+// 		mark = true
+// 	}
+
+// 	divide = func(newDividend, newDivisor, ans int) int {
+// 		if newDividend == newDivisor {
+// 			ans++
+// 			return
+// 		}
+// 		if newDividend < newDivisor {
+// 			return
+// 		}
+// 		if newDividend > newDivisor+newDivisor {
+// 			if ans == 0 {
+// 				ans = 1
+// 			}
+
+// 			ans += ans
+// 			divide(newDividend, newDivisor+newDivisor)
+// 		}
+// 		if newDividend > newDivisor {
+// 			if newDivisor == divisor {
+// 				ans++
+// 				return
+// 			}
+// 			divide(newDividend-newDivisor, divisor)
+// 		}
+// 	}
+
+// 	divide(dividend, divisor)
+
+// 	if mark {
+// 		return 0 - ans
+// 	}
+// 	return ans
+// }

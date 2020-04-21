@@ -1172,3 +1172,24 @@ func Test_RemoveDuplicates2(t *testing.T) {
 		})
 	}
 }
+
+// func Test_Divide(t *testing.T) {
+// 	tests := []struct {
+// 		name     string
+// 		dividend int
+// 		divisor  int
+// 		want     int
+// 	}{
+// 		{
+// 			name:     "10 / 3 => 3",
+// 			dividend: 10,
+// 			divisor:  3,
+// 			want:     3,
+// 		},
+// 	}
+// 	for _, tt := range tests {
+// 		t.Run(tt.name, func(t *testing.T) {
+// 			assert.Equal(t, tt.want, Divide(tt.dividend, tt.divisor))
+// 		})
+// 	}
+// }
