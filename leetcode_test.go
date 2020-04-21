@@ -1151,3 +1151,24 @@ func Test_MoveZeroes(t *testing.T) {
 		})
 	}
 }
+
+func Test_RemoveDuplicates2(t *testing.T) {
+	tests := []struct {
+		name string
+		nums []int
+		want int
+	}{
+		{
+			name: "00011123 =>001123 => 6",
+			nums: []int{0, 0, 1, 1, 2, 3},
+			want: 6,
+		},
+		// 1,0 2,0 3,0 4,1 4,1 5,1 6,1 7,2 7,2 8,3
+		// 1,0 2,0 2,0 2,0 2,1 3,0 4,1 4,1 4,2 5,1
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, RemoveDuplicates2(tt.nums))
+		})
+	}
+}

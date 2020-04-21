@@ -1079,3 +1079,25 @@ func MoveZeroes(nums []int) {
 		q++
 	}
 }
+
+func RemoveDuplicates2(nums []int) int {
+	p, q, count := 1, 1, 0
+	for p < len(nums) {
+		if nums[p] == nums[p-1] {
+			count++
+			if count > 1 {
+				p++
+				continue
+			}
+			nums[q] = nums[p]
+			p++
+			q++
+			continue
+		}
+		count = 0
+		nums[q] = nums[p]
+		p++
+		q++
+	}
+	return q
+}
