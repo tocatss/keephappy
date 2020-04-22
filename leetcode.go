@@ -1102,56 +1102,63 @@ func RemoveDuplicates2(nums []int) int {
 	return q
 }
 
-// func Divide(dividend int, divisor int) int {
-// 	if dividend == 0 {
-// 		return 0
-// 	}
+func Divide(dividend int, divisor int) int {
+	if dividend == 0 {
+		return 0
+	}
 
-// 	var (
-// 		divide func(dividend int, divisor int)
-// 		mark   bool
-// 		ans    int
-// 	)
-// 	if dividend < 0 && divisor < 0 {
-// 		dividend = 0 - dividend
-// 		divisor = 0 - divisor
-// 	} else if dividend < 0 {
-// 		dividend = 0 - dividend
-// 		mark = true
-// 	} else if divisor < 0 {
-// 		divisor = 0 - divisor
-// 		mark = true
-// 	}
+	var (
+		divide func(dividend, divisor, ans int) int
+		mark   bool
+	)
+	if dividend < 0 && divisor < 0 {
+		dividend = 0 - dividend
+		divisor = 0 - divisor
+	} else if dividend < 0 {
+		dividend = 0 - dividend
+		mark = true
+	} else if divisor < 0 {
+		divisor = 0 - divisor
+		mark = true
+	}
 
-// 	divide = func(newDividend, newDivisor, ans int) int {
-// 		if newDividend == newDivisor {
-// 			ans++
-// 			return
-// 		}
-// 		if newDividend < newDivisor {
-// 			return
-// 		}
-// 		if newDividend > newDivisor+newDivisor {
-// 			if ans == 0 {
-// 				ans = 1
-// 			}
+	divide = func(newDividend, newDivisor, ans int) int {
+		if newDividend < newDivisor {
+			return 0
+		} else if newDividend == newDivisor {
+			return 1
+		} else if newDividend > newDivisor+newDivisor {
+			if ans == 0 {
+				ans = 1
+			}
 
-// 			ans += ans
-// 			divide(newDividend, newDivisor+newDivisor)
-// 		}
-// 		if newDividend > newDivisor {
-// 			if newDivisor == divisor {
-// 				ans++
-// 				return
-// 			}
-// 			divide(newDividend-newDivisor, divisor)
-// 		}
-// 	}
+			ans += ans
+			return divide(newDividend, newDivisor+newDivisor, ans)
+		} else if newDividend == newDivisor+newDivisor {
+			if ans == 0 {
+				ans = 1
+			}
 
-// 	divide(dividend, divisor)
+			ans += ans
+			return ans
+		} else { // newDividend > newDivisor
+			if newDivisor == divisor {
+				return 1
+			}
+			return ans + divide(newDividend-newDivisor, divisor, 0)
+		}
+	}
 
-// 	if mark {
-// 		return 0 - ans
-// 	}
-// 	return ans
-// }
+	ans := divide(dividend, divisor, 0)
+	if mark {
+		ans = 0 - ans
+	}
+	if ans > math.MaxInt32 {
+		return math.MaxInt32
+	}
+	if ans < math.MinInt32 {
+		return math.MinInt32
+	}
+
+	return ans
+}
