@@ -1162,3 +1162,65 @@ func Divide(dividend int, divisor int) int {
 
 	return ans
 }
+
+func FindSubstring(s string, words []string) []int {
+	// Union all word.
+	var (
+		path     []string
+		visited  []bool = make([]bool, len(words))
+		allWords [][]string
+		dfs      func(visited []bool, path []string)
+	)
+
+	dfs = func(visited []bool, path []string) {
+		if len(path) == len(words) {
+			copied := make([]string, len(words))
+			copy(copied, path)
+			allWords = append(allWords, copied)
+			return
+		}
+
+		for i, v := range words {
+			if visited[i] {
+				continue
+			}
+
+			path = append(path, v)
+			visited[i] = true
+
+			dfs(visited, path)
+
+			visited[i] = false
+			path = path[:len(path)-1]
+
+		}
+	}
+
+	dfs(visited, path)
+
+	ansMap := make(map[int]interface{})
+	for _, v := range allWords {
+		substr := strings.Join(v, "")
+		if len(substr) == 0 {
+			ansMap[0] = nil
+			continue
+		}
+
+		ss := s
+		index := strings.Index(ss, substr)
+		for index != -1 {
+			ansMap[index] = nil
+			index++
+			if index > len(ss)
+		}
+
+	}
+
+	ans := make([]int, 0, len(ansMap))
+	for k, _ := range ansMap {
+		ans = append(ans, k)
+	}
+	log.Print(ansMap, ans)
+
+	return ans
+}

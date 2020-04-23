@@ -1217,3 +1217,30 @@ func Test_Divide(t *testing.T) {
 		})
 	}
 }
+
+// func Test_FindSubstring(t *testing.T) {
+// 	tests := []struct {
+// 		name  string
+// 		s     string
+// 		words []string
+// 		want  []int
+// 	}{
+// 		{
+// 			name:  "Index [a,b] in abcacba",
+// 			s:     "abcacba",
+// 			words: []string{"a", "b"},
+// 			want:  []int{0, 5},
+// 		},
+// 		{
+// 			name:  "Index [,] in abcacba",
+// 			s:     "abcacba",
+// 			words: []string{"", ""},
+// 			want:  []int{0},
+// 		},
+// 	}
+// 	for _, tt := range tests {
+// 		t.Run(tt.name, func(t *testing.T) {
+// 			assert.ElementsMatch(t, tt.want, FindSubstring(tt.s, tt.words))
+// 		})
+// 	}
+// }
