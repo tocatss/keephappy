@@ -1164,63 +1164,127 @@ func Divide(dividend int, divisor int) int {
 }
 
 func FindSubstring(s string, words []string) []int {
-	// Union all word.
+	// Union words waste too much time.
+	// if s == "" {
+	// 	return nil
+	// }
+	// if len(words) == 0 {
+	// 	return nil
+	// }
+	// // Union all word.
+	// var (
+	// 	path     []string
+	// 	visited  []bool = make([]bool, len(words))
+	// 	allWords [][]string
+	// 	dfs      func(visited []bool, path []string)
+	// )
+
+	// dfs = func(visited []bool, path []string) {
+	// 	if len(path) == len(words) {
+	// 		copied := make([]string, len(words))
+	// 		copy(copied, path)
+	// 		allWords = append(allWords, copied)
+	// 		return
+	// 	}
+
+	// 	for i, v := range words {
+	// 		if visited[i] {
+	// 			continue
+	// 		}
+
+	// 		path = append(path, v)
+	// 		visited[i] = true
+
+	// 		dfs(visited, path)
+
+	// 		visited[i] = false
+	// 		path = path[:len(path)-1]
+
+	// 	}
+	// }
+
+	// dfs(visited, path)
+
+	// ansMap := make(map[int]interface{})
+	// for _, v := range allWords {
+	// 	substr := strings.Join(v, "")
+	// 	if len(substr) == 0 {
+	// 		ansMap[0] = nil
+	// 		continue
+	// 	}
+
+	// 	lastIndex := 0
+	// 	i := strings.Index(s, substr)
+	// 	for i != -1 {
+	// 		index := lastIndex + i
+	// 		ansMap[index] = nil
+
+	// 		if index+1 >= len(s) {
+	// 			break
+	// 		}
+
+	// 		lastIndex = index + 1
+	// 		i = strings.Index(s[index+1:], substr)
+	// 	}
+
+	// }
+
+	// ans := make([]int, 0, len(ansMap))
+	// for k := range ansMap {
+	// 	ans = append(ans, k)
+	// }
+
+	// return ans
+	if s == "" || len(words) == 0 {
+		return nil
+	}
+	if len(words[0]) == 0 {
+		return []int{0}
+	}
 	var (
-		path     []string
-		visited  []bool = make([]bool, len(words))
-		allWords [][]string
-		dfs      func(visited []bool, path []string)
+		wl  = len(words[0])
+		wsl = wl * len(words)
+		wm  = make(map[string]int)
+		cwm = make(map[string]int)
+
+		isWordEqual = func(ss string, cwm, wm map[string]int) bool {
+			for i := 0; i < len(ss); i += wl {
+				k := ss[i : i+wl]
+				v, ok := cwm[k]
+				if !ok || v == wm[k] {
+					return false
+				}
+				cwm[k]++
+			}
+			return true
+		}
+		resetCopyWordMap = func(cwm map[string]int) {
+			for k := range cwm {
+				cwm[k] = 0
+			}
+		}
 	)
 
-	dfs = func(visited []bool, path []string) {
-		if len(path) == len(words) {
-			copied := make([]string, len(words))
-			copy(copied, path)
-			allWords = append(allWords, copied)
-			return
-		}
-
-		for i, v := range words {
-			if visited[i] {
-				continue
-			}
-
-			path = append(path, v)
-			visited[i] = true
-
-			dfs(visited, path)
-
-			visited[i] = false
-			path = path[:len(path)-1]
-
-		}
-	}
-
-	dfs(visited, path)
-
-	ansMap := make(map[int]interface{})
-	for _, v := range allWords {
-		substr := strings.Join(v, "")
-		if len(substr) == 0 {
-			ansMap[0] = nil
+	for _, v := range words {
+		if _, ok := wm[v]; !ok {
+			wm[v] = 1
 			continue
 		}
+		wm[v]++
+	}
+	for k := range wm {
+		cwm[k] = 0
+	}
 
-		ss := s
-		index := strings.Index(ss, substr)
-		for index != -1 {
-			ansMap[index] = nil
-			index++
-			if index > len(ss)
+	ans := make([]int, 0)
+	for start := 0; start+wsl <= len(s); start++ {
+		ss := s[start : start+wsl]
+		if ok := isWordEqual(ss, cwm, wm); ok {
+			ans = append(ans, start)
+			resetCopyWordMap(cwm)
+			continue
 		}
-
+		resetCopyWordMap(cwm)
 	}
-
-	ans := make([]int, 0, len(ansMap))
-	for k, _ := range ansMap {
-		ans = append(ans, k)
-	}
-	log.Print(ansMap, ans)
-
 	return ans
 }
