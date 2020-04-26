@@ -1256,3 +1256,33 @@ func Test_FindSubstring(t *testing.T) {
 		})
 	}
 }
+
+func Test_NextPermutation(t *testing.T) {
+	tests := []struct {
+		name    string
+		payload []int
+		want    []int
+	}{
+		{
+			name:    "123 => 132",
+			payload: []int{1, 2, 3},
+			want:    []int{1, 3, 2},
+		},
+		{
+			name:    "321 => 123",
+			payload: []int{3, 2, 1},
+			want:    []int{1, 2, 3},
+		},
+		{
+			name:    "132 => 213",
+			payload: []int{1, 3, 2},
+			want:    []int{2, 1, 3},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			NextPermutation(tt.payload)
+			assert.Equal(t, tt.want, tt.payload)
+		})
+	}
+}

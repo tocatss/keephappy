@@ -1288,3 +1288,43 @@ func FindSubstring(s string, words []string) []int {
 	}
 	return ans
 }
+
+func NextPermutation(nums []int) {
+	if len(nums) <= 1 {
+		return
+	}
+
+	for i := len(nums) - 1; i > 0; i-- {
+		// Find nextPermutation => i-1.
+		if nums[i] > nums[i-1] {
+			// Find the smallest one which bigger than nums[i-1] in nums[i:]
+			for j := len(nums) - 1; j >= i; j-- {
+				if nums[j] > nums[i-1] {
+					// Swap i-i and smallest one.
+					nums[i-1], nums[j] = nums[j], nums[i-1]
+					break
+				}
+			}
+			// Reverse nums[i:].
+			sublen := len(nums) - 1 - i
+			base := i
+			for j := 0; ; j++ {
+				source := j + base
+				target := sublen - j + base
+				nums[source], nums[target] = nums[target], nums[source]
+				if source == target || source+1 == target {
+					return
+				}
+			}
+		}
+	}
+
+	// Not found nextPermutation,reverse nums[:]
+	for i := 0; ; i++ {
+		j := len(nums) - 1 - i
+		nums[i], nums[j] = nums[j], nums[i]
+		if j == i+1 || j == i {
+			return
+		}
+	}
+}
