@@ -1328,3 +1328,58 @@ func NextPermutation(nums []int) {
 		}
 	}
 }
+
+func SearchTarget(nums []int, target int) int {
+	if len(nums) == 0 {
+		return -1
+	}
+	if target > nums[len(nums)-1] && target < nums[0] {
+		return -1
+	}
+
+	bSearch := func(start, end int) int {
+		for start <= end {
+			m := (start + end) / 2
+			if nums[m] < target {
+				start = m + 1
+			} else if nums[m] > target {
+				end = m - 1
+			} else {
+				return m
+			}
+		}
+		return -1
+	}
+
+	if target <= nums[len(nums)-1] {
+		for start, end := 0, len(nums)-1; start <= end; {
+			mid := (start + end) / 2
+			if nums[mid] > nums[end] {
+				start = mid + 1
+				continue
+			}
+			if nums[mid] > target {
+				end = mid - 1
+				continue
+			}
+
+			return bSearch(mid, end)
+		}
+		return -1
+	}
+
+	for start, end := 0, len(nums)-1; start <= end; {
+		mid := (start + end) / 2
+		if nums[mid] < nums[0] {
+			end = mid - 1
+			continue
+		}
+		if nums[mid] < target {
+			start = mid + 1
+			continue
+		}
+
+		return bSearch(start, mid)
+	}
+	return -1
+}

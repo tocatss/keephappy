@@ -1286,3 +1286,42 @@ func Test_NextPermutation(t *testing.T) {
 		})
 	}
 }
+
+func Test_SearchTarget(t *testing.T) {
+	tests := []struct {
+		name   string
+		nums   []int
+		target int
+		want   int
+	}{
+		{
+			name:   "nums = [4,5,6,7,0,1,2], target = 0",
+			nums:   []int{4, 5, 6, 7, 0, 1, 2},
+			target: 0,
+			want:   4,
+		},
+		{
+			name:   "nums = [10,12,0,2,4,6,8], target = 6",
+			nums:   []int{10, 12, 0, 2, 4, 6, 8},
+			target: 6,
+			want:   5,
+		},
+		{
+			name:   "nums = [10,12,14,16,0,2,4,6,8], target 14",
+			nums:   []int{10, 12, 14, 16, 0, 2, 4, 6, 8},
+			target: 14,
+			want:   2,
+		},
+		{
+			name:   "nums = [3,1], target 1",
+			nums:   []int{3, 1},
+			target: 1,
+			want:   1,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, SearchTarget(tt.nums, tt.target))
+		})
+	}
+}
