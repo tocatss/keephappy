@@ -1383,3 +1383,30 @@ func SearchTarget(nums []int, target int) int {
 	}
 	return -1
 }
+
+func LongestValidParentheses(s string) int {
+	ans := 0
+	for i := 0; i < len(s); i++ {
+		match, path, valued := 0, 0, 0
+		for j := i; j < len(s); j++ {
+			switch s[j] {
+			case '(':
+				path++
+			case ')':
+				path--
+			}
+			if path >= 0 {
+				match++
+				if path == 0 {
+					valued = match
+				}
+				continue
+			}
+			break
+		}
+		if valued > ans {
+			ans = valued
+		}
+	}
+	return ans
+}

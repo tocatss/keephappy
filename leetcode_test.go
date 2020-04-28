@@ -1325,3 +1325,22 @@ func Test_SearchTarget(t *testing.T) {
 		})
 	}
 }
+
+func Test_LongestValidParentheses(t *testing.T) {
+	tests := []struct {
+		name    string
+		payload string
+		want    int
+	}{
+		{
+			"(())() )) => valued is 6",
+			"(())()))",
+			6,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, LongestValidParentheses(tt.payload))
+		})
+	}
+}
