@@ -1344,3 +1344,41 @@ func Test_LongestValidParentheses(t *testing.T) {
 		})
 	}
 }
+func Test_SearchRange(t *testing.T) {
+	tests := []struct {
+		name   string
+		nums   []int
+		target int
+		want   []int
+	}{
+		{
+			"nums = [5,7,7,8,8,10] target=8; want: [3,4]",
+			[]int{5, 7, 7, 8, 8, 10},
+			8,
+			[]int{3, 4},
+		},
+		{
+			"nums = [5,7,7,8,8,10] target=8; want: [3,4]",
+			[]int{5, 7, 7, 8, 8, 10},
+			6,
+			[]int{-1, -1},
+		},
+		{
+			"nums = [1] target=1; want: [1]",
+			[]int{1},
+			1,
+			[]int{0, 0},
+		},
+		{
+			"nums = [1,1] target=1; want: [0,1]",
+			[]int{1, 1},
+			1,
+			[]int{0, 1},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, SearchRange(tt.nums, tt.target))
+		})
+	}
+}

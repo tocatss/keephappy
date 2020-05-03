@@ -1410,3 +1410,41 @@ func LongestValidParentheses(s string) int {
 	}
 	return ans
 }
+
+func SearchRange(nums []int, target int) []int {
+	notFound := []int{-1, -1}
+	if len(nums) == 0 {
+		return notFound
+	}
+
+	for start, end := 0, len(nums)-1; start <= end; {
+		switch mid := (start + end) / 2; true {
+		case nums[mid] < target:
+			start = mid + 1
+		case nums[mid] > target:
+			end = mid - 1
+		case nums[mid] == target:
+			var (
+				ans     = make([]int, 2)
+				hasNext = func(index, target int) bool {
+					return index <= len(nums)-1 && nums[index] == target
+				}
+				hasLast = func(index, target int) bool {
+					return index >= 0 && nums[index] == target
+				}
+			)
+			for i, j := mid, mid; hasLast(i, target) || hasNext(j, target); {
+				if hasLast(i, target) {
+					ans[0] = i
+					i--
+				}
+				if hasNext(j, target) {
+					ans[1] = j
+					j++
+				}
+			}
+			return ans
+		}
+	}
+	return notFound
+}
