@@ -1412,39 +1412,80 @@ func LongestValidParentheses(s string) int {
 }
 
 func SearchRange(nums []int, target int) []int {
-	notFound := []int{-1, -1}
-	if len(nums) == 0 {
-		return notFound
-	}
+	// notFound := []int{-1, -1}
+	// if len(nums) == 0 {
+	// 	return notFound
+	// }
 
-	for start, end := 0, len(nums)-1; start <= end; {
-		switch mid := (start + end) / 2; true {
-		case nums[mid] < target:
-			start = mid + 1
-		case nums[mid] > target:
-			end = mid - 1
-		case nums[mid] == target:
-			var (
-				ans     = make([]int, 2)
-				hasNext = func(index, target int) bool {
-					return index <= len(nums)-1 && nums[index] == target
-				}
-				hasLast = func(index, target int) bool {
-					return index >= 0 && nums[index] == target
-				}
-			)
-			for i, j := mid, mid; hasLast(i, target) || hasNext(j, target); {
-				if hasLast(i, target) {
-					ans[0] = i
-					i--
-				}
-				if hasNext(j, target) {
-					ans[1] = j
-					j++
+	// for start, end := 0, len(nums)-1; start <= end; {
+	// 	switch mid := (start + end) / 2; true {
+	// 	case nums[mid] < target:
+	// 		start = mid + 1
+	// 	case nums[mid] > target:
+	// 		end = mid - 1
+	// 	case nums[mid] == target:
+	// 		var (
+	// 			ans     = make([]int, 2)
+	// 			hasNext = func(index, target int) bool {
+	// 				return index <= len(nums)-1 && nums[index] == target
+	// 			}
+	// 			hasLast = func(index, target int) bool {
+	// 				return index >= 0 && nums[index] == target
+	// 			}
+	// 		)
+	// 		for i, j := mid, mid; hasLast(i, target) || hasNext(j, target); {
+	// 			if hasLast(i, target) {
+	// 				ans[0] = i
+	// 				i--
+	// 			}
+	// 			if hasNext(j, target) {
+	// 				ans[1] = j
+	// 				j++
+	// 			}
+	// 		}
+	// 		return ans
+	// 	}
+	// }
+	var (
+		leftSearch = func(nums []int, target int) int {
+			left, right := 0, len(nums) // 左闭右开区间
+			for left < right {
+				switch mid := left + (right-left)/2; {
+				case nums[mid] == target:
+					right = mid // 相等,接着找左边界.
+				case nums[mid] < target:
+					left = mid + 1
+				case nums[mid] > target:
+					right = mid // 右开区间,right = mid
 				}
 			}
-			return ans
+
+			if left == len(nums) || nums[left] != target {
+				return -1
+			}
+			return left
 		}
+		rightSearch = func(nums []int, target int) int {
+			left, right := 0, len(nums)
+			for left < right {
+				switch mid := left + (right-left)/2; {
+				case nums[mid] == target:
+					left = mid + 1 // 找右边界.
+				case nums[mid] < target:
+					left = mid + 1
+				case nums[mid] > target:
+					right = mid
+				}
+			}
+
+			if left == 0 || nums[left-1] != target {
+				return -1
+			}
+			return left - 1
+		}
+	)
+	return []int{
+		leftSearch(nums, target),
+		rightSearch(nums, target),
 	}
-	return notFound
 }
