@@ -11,16 +11,17 @@ import (
 )
 
 func Test_allowActionCommon(t *testing.T) {
-	var (
+	const (
 		userID = "userID"
 		action = "login"
 	)
-
 	tests := []struct {
 		name     string
 		duration int
 		maxCount int
 		expect   []bool
+		userID   string
+		action   string
 	}{
 		{
 			name:     "duration: 5s maxCount: 5 => 10 allows",
@@ -43,9 +44,7 @@ func Test_allowActionCommon(t *testing.T) {
 				if err != nil {
 					t.Fatal(err)
 				}
-				rc.ZRemRangeByScore(fmt.Sprintf("zset:%s:%s", userID, action),
-					"0", "99999999999999999")
-
+				rc.ZRemRangeByScore(fmt.Sprintf("zset:%s:%s", userID, action), "-1", "9999999999999999")
 			})
 
 			got := make([]bool, 0)
@@ -59,11 +58,11 @@ func Test_allowActionCommon(t *testing.T) {
 				if isAllow {
 					got = append(got, true)
 					// Sleep a while.
-					time.Sleep(1 * time.Millisecond)
+					time.Sleep(10 * time.Millisecond)
 					continue
 				}
 
-				time.Sleep(time.Duration(tt.duration) * time.Second)
+				time.Sleep(time.Duration(tt.duration)*time.Second + 10*time.Millisecond)
 			}
 			assert.Equal(t, tt.expect, got)
 		})
