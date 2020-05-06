@@ -1,4 +1,4 @@
-package dynamicopt
+package dynamicprogramming
 
 // dynamic programming 𝑎𝑙𝑠𝑜𝑘𝑛𝑜𝑤𝑛𝑎𝑠𝑑𝑦𝑛𝑎𝑚𝑖𝑐𝑜𝑝𝑡𝑖𝑚𝑖𝑧𝑎𝑡𝑖𝑜𝑛 is a method for solving a complex problem
 // by breaking it down into a collection of simpler subproblems, solving each of those subproblems just once,
@@ -84,4 +84,46 @@ func ClimbingStairsDynamic(n int) int {
 		memo = append(memo, memo[i-1]+memo[i-2])
 	}
 	return memo[n-1]
+}
+
+// 给定一个整数数组 nums ，找到一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。
+// 输入: [-2,1,-3,4,-1,2,1,-5,4],
+// 输出: 6
+// 解释: 连续子数组 [4,-1,2,1] 的和最大，为 6。
+
+// 动态规划：
+// 动态规划告诉我们解决问题的思路，我们不是直接去解决题目问的问题，而是去发现这个问题最开始的样子，
+// 通过「状态转移」，每一步参考了之前计算的结果，得到最终的答案。
+// 解：
+// dp[i] => 以nums[i]为终点的最大和
+// dp[i-1] => 以nums[i-1]为终点的最大和
+// dp[i] = Math.Max(nums[i], dp[i-1] + nums[i])  // dp[i-1] 为可能为负
+// 本题就是要找到 dp[0]...dp[n-1]的最大值。
+func MaxSubArray(nums []int) int {
+	if len(nums) == 0 {
+		return -1
+	}
+
+	ans := nums[0]
+
+	// 由于下一个状态只和上一个有关，那么可以不用数组，从而缩小空间复杂度
+	// dp := make([]int, len(nums))
+	// dp[0] = nums[0]
+	state := nums[0]
+	for i := 1; i <= len(nums)-1; i++ {
+		if state < 0 {
+			state = nums[i]
+			if state > ans {
+				ans = state
+			}
+			continue
+		}
+
+		state += nums[i]
+		if state > ans {
+			ans = state
+		}
+	}
+
+	return ans
 }
