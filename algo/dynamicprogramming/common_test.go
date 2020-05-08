@@ -57,3 +57,22 @@ func Benchmark_ClimbingStairs(b *testing.B) {
 		ClimbingStairsDynamic(i)
 	}
 }
+
+func Test_LengthOfLIS(t *testing.T) {
+	tests := []struct {
+		name string
+		nums []int
+		want int
+	}{
+		{
+			name: "[10,9,2,5,3,7,101,18] => [2,3,7,101] => 4",
+			nums: []int{10, 9, 2, 5, 3, 7, 101, 18},
+			want: 4,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, LengthOfLIS(tt.nums))
+		})
+	}
+}

@@ -127,3 +127,33 @@ func MaxSubArray(nums []int) int {
 
 	return ans
 }
+
+func LengthOfLIS(nums []int) int {
+	if len(nums) == 0 {
+		return 0
+	}
+
+	// dp[n] 到第N个元素的个数
+	dp := make([]int, len(nums))
+	// 找到比index小的最大值所拥有的元素个数。
+	maxOfLower := func(index int) int {
+		max := 0
+		target := nums[index]
+		for i := index - 1; i >= 0; i-- {
+			if nums[i] < target && dp[i] > max {
+				max = dp[i]
+			}
+		}
+		return max
+	}
+
+	dp[0] = 1
+	max := dp[0]
+	for i := 1; i < len(nums); i++ {
+		dp[i] = maxOfLower(i) + 1
+		if dp[i] > max {
+			max = dp[i]
+		}
+	}
+	return max
+}
