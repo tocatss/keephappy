@@ -76,3 +76,30 @@ func Test_LengthOfLIS(t *testing.T) {
 		})
 	}
 }
+
+func Test_UniquePaths(t *testing.T) {
+	tests := []struct {
+		name string
+		m    int
+		n    int
+		want int
+	}{
+		{
+			name: "m = 3, n = 2 => 3",
+			m:    3,
+			n:    2,
+			want: 3,
+		},
+		{
+			name: "m = 7, n = 3 => 28",
+			m:    7,
+			n:    3,
+			want: 28,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, UniquePaths(tt.m, tt.n))
+		})
+	}
+}

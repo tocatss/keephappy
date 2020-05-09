@@ -128,6 +128,9 @@ func MaxSubArray(nums []int) int {
 	return ans
 }
 
+// 输入: [10,9,2,5,3,7,101,18]
+// 输出: 4
+// 解释: 最长的上升子序列是 [2,3,7,101]，它的长度是 4。
 func LengthOfLIS(nums []int) int {
 	if len(nums) == 0 {
 		return 0
@@ -156,4 +159,38 @@ func LengthOfLIS(nums []int) int {
 		}
 	}
 	return max
+}
+
+// 输入: m = 3, n = 2
+// 输出: 3
+// 解释:
+// 从左上角开始，总共有 3 条路径可以到达右下角。
+// 1. 向右 -> 向右 -> 向下
+// 2. 向右 -> 向下 -> 向右
+// 3. 向下 -> 向右 -> 向右
+func UniquePaths(m int, n int) int {
+	if m <= 0 || n <= 0 {
+		return -1
+	}
+
+	dp := make([][]int, n)
+	for i := range dp {
+		dp[i] = make([]int, m)
+	}
+
+	// start dp[0][0]
+	// end   dp[n-1][m-1]
+	for i := range dp {
+		for j := range dp[i] {
+			if i == 0 || j == 0 {
+				dp[i][j] = 1
+				continue
+			}
+
+			dp[i][j] = dp[i-1][j] + dp[i][j-1]
+		}
+
+	}
+
+	return dp[n-1][m-1]
 }
