@@ -103,3 +103,25 @@ func Test_UniquePaths(t *testing.T) {
 		})
 	}
 }
+
+func Test_UniquePathsWithObstacles(t *testing.T) {
+	tests := []struct {
+		name    string
+		payload [][]int
+		want    int
+	}{
+		{
+			name: "m = 3, n = 2 => 3",
+			payload: [][]int{
+				[]int{0, 0, 0},
+				[]int{0, 0, 0},
+			},
+			want: 3,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, UniquePathsWithObstacles(tt.payload))
+		})
+	}
+}
