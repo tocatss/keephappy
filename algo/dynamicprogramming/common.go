@@ -194,3 +194,40 @@ func UniquePaths(m int, n int) int {
 
 	return dp[n-1][m-1]
 }
+
+func UniquePathsWithObstacles(obstacleGrid [][]int) int {
+	if len(obstacleGrid) == 0 {
+		return -1
+	}
+	if len(obstacleGrid[0]) == 0 {
+		return -1
+	}
+
+	n := len(obstacleGrid)
+	m := len(obstacleGrid[0])
+	dp := make([][]int, n)
+	for i := range dp {
+		dp[i] = make([]int, m)
+	}
+
+	for i := range obstacleGrid {
+		for j, v := range obstacleGrid[i] {
+			if v == 1 {
+				dp[i][j] = 0
+				continue
+			}
+
+			if i == 0 && j == 0 {
+				dp[i][j] = 1
+			} else if i == 0 {
+				dp[0][j] = dp[0][j-1]
+			} else if j == 0 {
+				dp[i][0] = dp[i-1][0]
+			} else {
+				dp[i][j] = dp[i-1][j] + dp[i][j-1]
+			}
+		}
+	}
+
+	return dp[n-1][m-1]
+}
