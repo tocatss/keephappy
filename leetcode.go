@@ -1546,3 +1546,57 @@ func MyPowRecursion(x float64, n int) float64 {
 	}
 	return 1.0 / recursion(x, -n)
 }
+
+// 添加辅助栈用于记录最小值,空间换时间.
+type MinStack struct {
+	nums    []int
+	minNums []int
+}
+
+/** initialize your data structure here. */
+func Constructor() MinStack {
+	return MinStack{
+		nums:    []int{},
+		minNums: []int{},
+	}
+}
+
+func (this *MinStack) Push(x int) {
+	if len(this.nums) == 0 {
+		this.nums = append(this.nums, x)
+		this.minNums = append(this.minNums, x)
+		return
+	}
+
+	min := this.minNums[len(this.minNums)-1]
+	if x < min {
+		this.nums = append(this.nums, x)
+		this.minNums = append(this.minNums, x)
+		return
+	}
+	this.nums = append(this.nums, x)
+	this.minNums = append(this.minNums, min)
+}
+
+func (this *MinStack) Pop() {
+	if len(this.nums) == 0 {
+		return
+	}
+
+	this.nums = this.nums[0 : len(this.nums)-1]
+	this.minNums = this.minNums[0 : len(this.minNums)-1]
+}
+
+func (this *MinStack) Top() int {
+	if len(this.nums) == 0 {
+		return -1
+	}
+	return this.nums[len(this.nums)-1]
+}
+
+func (this *MinStack) GetMin() int {
+	if len(this.nums) == 0 {
+		return -1
+	}
+	return this.minNums[len(this.minNums)-1]
+}
