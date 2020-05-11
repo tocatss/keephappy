@@ -1523,3 +1523,26 @@ func MyPow(x float64, n int) float64 {
 	}
 	return calc(x, n)
 }
+
+func MyPowRecursion(x float64, n int) float64 {
+	// x^8 = x^4*x^4 = x^2*x^2*x^2*x^2 ...
+	if n == 0 {
+		return 1
+	}
+
+	var recursion func(x float64, n int) float64
+	recursion = func(x float64, n int) float64 {
+		if n == 1 {
+			return x
+		}
+		y := recursion(x, n/2)
+		if n%2 == 0 {
+			return y * y
+		}
+		return y * y * x
+	}
+	if n > 0 {
+		return recursion(x, n)
+	}
+	return 1.0 / recursion(x, -n)
+}
