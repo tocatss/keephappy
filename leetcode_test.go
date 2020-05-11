@@ -1382,3 +1382,36 @@ func Test_SearchRange(t *testing.T) {
 		})
 	}
 }
+
+func Test_MyPow(t *testing.T) {
+	tests := []struct {
+		name string
+		x    float64
+		n    int
+		want float64
+	}{
+		{
+			name: "2^3 =8",
+			x:    2.0,
+			n:    3,
+			want: 8.0,
+		},
+		{
+			name: "-2^3 =-8",
+			x:    -2.0,
+			n:    3,
+			want: -8.0,
+		},
+		{
+			name: "2^-3 =1/8",
+			x:    2,
+			n:    -3,
+			want: 1.0 / 8.0,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, MyPow(tt.x, tt.n))
+		})
+	}
+}

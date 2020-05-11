@@ -1489,3 +1489,37 @@ func SearchRange(nums []int, target int) []int {
 		rightSearch(nums, target),
 	}
 }
+
+// 即计算 x 的 n 次幂函数。
+// 2分法
+func MyPow(x float64, n int) float64 {
+	// 1.将n进行二进制表示：
+	// n=9 => 1001 => 8*1+4*0+2*0+1*1
+	// x^n => x^8*x^0*x^0*x^1
+	if n == 0 {
+		return 1
+	}
+	if x == 0 {
+		return 0
+	}
+
+	calc := func(x float64, n int) float64 {
+		var (
+			ans     float64 = 1
+			iterate float64 = x
+		)
+		for i := n; i > 0; {
+			if i&1 == 1 {
+				ans *= iterate
+			}
+			iterate *= iterate
+			i = i >> 1
+		}
+		return ans
+	}
+
+	if n < 0 {
+		return 1 / calc(x, -n)
+	}
+	return calc(x, n)
+}
