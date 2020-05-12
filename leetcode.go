@@ -1600,3 +1600,39 @@ func (this *MinStack) GetMin() int {
 	}
 	return this.minNums[len(this.minNums)-1]
 }
+
+/**
+ * Definition for a binary tree node.
+ */
+type TreeNode struct {
+	Val   int
+	Left  *TreeNode
+	Right *TreeNode
+}
+
+func LevelOrder(root *TreeNode) [][]int {
+	if root == nil {
+		return nil
+	}
+
+	ans := [][]int{}
+
+	parentNodes := []*TreeNode{root}
+	for len(parentNodes) > 0 {
+		childNodes := make([]*TreeNode, 0, len(parentNodes)*2)
+		vals := make([]int, 0, len(parentNodes))
+		for _, v := range parentNodes {
+			vals = append(vals, v.Val)
+			if v.Left != nil && v.Right != nil {
+				childNodes = append(childNodes, v.Left, v.Right)
+			} else if v.Left != nil {
+				childNodes = append(childNodes, v.Left)
+			} else if v.Right != nil {
+				childNodes = append(childNodes, v.Right)
+			}
+		}
+		ans = append(ans, vals)
+		parentNodes = childNodes
+	}
+	return ans
+}
