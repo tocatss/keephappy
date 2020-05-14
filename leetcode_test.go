@@ -1416,3 +1416,32 @@ func Test_MyPow(t *testing.T) {
 		})
 	}
 }
+
+func Test_SingleNumber(t *testing.T) {
+	tests := []struct {
+		name string
+		nums []int
+		want int
+	}{
+		{
+			name: "[1,2,1,2,3] => 3",
+			nums: []int{1, 2, 1, 2, 3},
+			want: 3,
+		},
+		{
+			name: "[1,2,1,2,3] => 3",
+			nums: []int{2, 1, 1, 2, 3},
+			want: 3,
+		},
+		{
+			name: "[1,2,1,2,3] => 3",
+			nums: []int{2, 1, 3, 1, 2},
+			want: 3,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, SingleNumber(tt.nums))
+		})
+	}
+}

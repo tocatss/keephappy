@@ -1636,3 +1636,46 @@ func LevelOrder(root *TreeNode) [][]int {
 	}
 	return ans
 }
+
+func LevelOrderDFS(root *TreeNode) [][]int {
+	if root == nil {
+		return nil
+	}
+
+	ans := [][]int{}
+
+	var dfs func(node *TreeNode, level int)
+	dfs = func(node *TreeNode, level int) {
+		if node == nil {
+			return
+		}
+
+		if level > len(ans)-1 {
+			ans = append(ans, []int{node.Val})
+		} else {
+			ans[level] = append(ans[level], node.Val)
+		}
+
+		dfs(node.Left, level+1)
+		dfs(node.Right, level+1)
+	}
+	dfs(root, 0)
+
+	return ans
+}
+
+// 给定一个非空整数数组，除了某个元素只出现一次以外，其余每个元素均出现两次。找出那个只出现了一次的元素。
+func SingleNumber(nums []int) int {
+	// 0和任何数做异或运算都是其本身； 0 XOR a = a
+	// 任何数和其自身做异或都是 0；a XOR a = 0
+	// XOR 满足交换律和结合律
+	if len(nums) == 0 {
+		return -1
+	}
+
+	ans := 0
+	for _, v := range nums {
+		ans ^= v
+	}
+	return ans
+}
