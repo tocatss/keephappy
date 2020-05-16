@@ -1445,3 +1445,37 @@ func Test_SingleNumber(t *testing.T) {
 		})
 	}
 }
+
+func Test_subarraySum(t *testing.T) {
+	tests := []struct {
+		name string
+		nums []int
+		k    int
+		want int
+	}{
+		{
+			name: "find 2 from [1,1,1]",
+			nums: []int{1, 1, 1},
+			k:    2,
+			want: 2,
+		},
+		{
+			name: "find 1 from [1,1,1]",
+			nums: []int{1, 1, 1},
+			k:    1,
+			want: 3,
+		},
+		{
+			name: "find 3 from [1,1,1]",
+			nums: []int{1, 1, 1},
+			k:    3,
+			want: 1,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, subarraySum(tt.nums, tt.k))
+			assert.Equal(t, tt.want, subarraySumWithPreSum(tt.nums, tt.k))
+		})
+	}
+}

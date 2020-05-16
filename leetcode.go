@@ -1679,3 +1679,38 @@ func SingleNumber(nums []int) int {
 	}
 	return ans
 }
+
+// 给定一个整数数组和一个整数 k，你需要找到该数组中和为 k 的连续的子数组的个数。
+// 示例 1 :
+// 输入:nums = [1,1,1], k = 2
+// 输出: 2 , [1,1] 与 [1,1] 为两种不同的情况。
+func subarraySum(nums []int, k int) int {
+	ans := 0
+	for i := range nums {
+		sum := 0
+		for j := i; j < len(nums); j++ {
+			sum += nums[j]
+			if sum == k {
+				ans++
+			}
+		}
+	}
+	return ans
+}
+
+func subarraySumWithPreSum(nums []int, k int) int {
+	preSum := make(map[int]int, 0)
+	preSum[0] = 1
+	ans := 0
+
+	// sum(i,j) = sum(0,j)-sum(0,i-1) = k
+	// sum(0,j) -k = sum(0,i-1)
+	sum := 0
+	for _, v := range nums {
+		sum += v
+		want := sum - k
+		ans += preSum[want]
+		preSum[sum]++
+	}
+	return ans
+}
