@@ -1714,3 +1714,42 @@ func subarraySumWithPreSum(nums []int, k int) int {
 	}
 	return ans
 }
+
+func ReverseKGroupAgain(head *ListNode, k int) *ListNode {
+	if k <= 1 {
+		return head
+	}
+
+	var (
+		reverse2Group func(last, left, right *ListNode)
+		isLenghEnough func(last *ListNode, k int) bool
+	)
+	reverse2Group = func(last, left, right *ListNode) {
+		left.Next = right.Next
+		right.Next = last.Next
+		last.Next = right
+	}
+	isLenghEnough = func(last *ListNode, k int) bool {
+		for k > 0 {
+			if last.Next != nil {
+				last = last.Next
+				k--
+				continue
+			}
+			return false
+		}
+		return true
+	}
+
+	dummyNode := &ListNode{Next: head}
+	last := dummyNode
+	for isLenghEnough(last, k) {
+		left := last.Next
+		for i := k; i > 1; i-- {
+			right := left.Next
+			reverse2Group(last, left, right)
+		}
+		last = left
+	}
+	return dummyNode.Next
+}
