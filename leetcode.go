@@ -1753,3 +1753,62 @@ func ReverseKGroupAgain(head *ListNode, k int) *ListNode {
 	}
 	return dummyNode.Next
 }
+
+// 现在你总共有 n 门课需要选，记为 0 到 n-1。
+// 在选修某些课程之前需要一些先修课程。 例如，想要学习课程 0 ，你需要先完成课程 1 ，我们用一个匹配来表示他们: [0,1]
+// 给定课程总量以及它们的先决条件，返回你为了学完所有课程所安排的学习顺序。
+// 可能会有多个正确的顺序，你只要返回一种就可以了。如果不可能完成所有课程，返回一个空数组。
+
+// 拓扑排序： 把有向无环图 变成 线性的排序。
+func findOrder(numCourses int, prerequisites [][]int) []int {
+	inDegree := make([]int, numCourses)
+	graph := make(map[int][]int)
+	for _, pre := range prerequisites {
+		k, v := pre[1], pre[0]
+		if _, ok := graph[k]; !ok {
+			graph[k] = make([]int, 0)
+		}
+		graph[k] = append(graph[k], v)
+
+		inDegree[v]++
+	}
+
+	ans := make([]int, 0)
+
+	findZero := func(nums []int) []int {
+		ans := make([]int, 0, len(nums))
+		for i, v := range nums {
+			if v == 0 {
+				ans = append(ans, i)
+			}
+		}
+		return ans
+	}
+	// 每次找对性能不好呢～
+	// for zerolist := findZero(inDegree); len(zerolist) > 0; zerolist = findZero(inDegree) {
+	// 	for _, from := range zerolist {
+	// 		inDegree[from]--
+	// 		for _, to := range graph[from] {
+	// 			inDegree[to]--
+	// 		}
+	// 		ans = append(ans, from)
+	// 	}
+	// }
+
+	zerolist := findZero(inDegree)
+	for i := 0; i < len(zerolist); i++ {
+		from := zerolist[i]
+		ans = append(ans, from)
+		for _, to := range graph[from] {
+			inDegree[to]--
+			if inDegree[to] == 0 {
+				zerolist = append(zerolist, to)
+			}
+		}
+	}
+
+	if len(ans) == numCourses {
+		return ans
+	}
+	return nil
+}

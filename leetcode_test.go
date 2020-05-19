@@ -1137,7 +1137,7 @@ func Test_reverseKGroupAgain(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.Equal(t, tt.want, ReverseKGroupAgain(&copy, tt.k))
+			assert.Equal(t, tt.want, ReverseKGroupAgain(tt.payload, tt.k))
 		})
 	}
 }
@@ -1546,6 +1546,45 @@ func Test_subarraySum(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			assert.Equal(t, tt.want, subarraySum(tt.nums, tt.k))
 			assert.Equal(t, tt.want, subarraySumWithPreSum(tt.nums, tt.k))
+		})
+	}
+}
+
+func Test_findOrder(t *testing.T) {
+	tests := []struct {
+		name          string
+		numCourses    int
+		prerequisites [][]int
+		want          []int
+	}{
+		{
+			name:       "ok: 0 -> 1,2 -> 3 => 0,1,2,3",
+			numCourses: 4,
+			prerequisites: [][]int{
+				{1, 0}, {2, 0}, {3, 1}, {3, 2},
+			},
+			want: []int{0, 1, 2, 3},
+		},
+		{
+			name:       "ok: 0 -> 1,2 -> 3 ->4 => 0,1,2,3,4",
+			numCourses: 5,
+			prerequisites: [][]int{
+				{1, 0}, {2, 0}, {3, 1}, {3, 2}, {4, 3},
+			},
+			want: []int{0, 1, 2, 3, 4},
+		},
+		{
+			name:       "not ok: 0 -> 1,2 -> 3 -> 2 => nil",
+			numCourses: 4,
+			prerequisites: [][]int{
+				{1, 0}, {2, 0}, {3, 1}, {3, 2}, {2, 3},
+			},
+			want: nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, findOrder(tt.numCourses, tt.prerequisites))
 		})
 	}
 }
