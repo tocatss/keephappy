@@ -1,97 +1,124 @@
 package datastructure
 
+import (
+	"errors"
+	"fmt"
+	"log"
+)
+
 // 最近使用的页面数据会在未来一段时期内仍然被使用,
 // 已经很久没有使用的页面很有可能在未来较长的一段时间内仍然不会被使用.
 
-type doubleNode struct {
+// LRU: 有长度和容量，并可以添加元素和取得元素
+// 添加元素：
+// 1. 添加新元素： 在头部添加，在size不够的时候需要从尾部删除。=> 需要记录头和尾。
+// 2. 添加已存在元素： 将该元素移动到头 （为了快速找到元素选择map结构，为了快速移动选择双向链表。
+// 取得元素：选择map结构
+
+type dNode struct {
 	data string
-	pre  *doubleNode
-	next *doubleNode
+	pre  *dNode
+	next *dNode
 }
 
-type lru struct {
+type lruModel struct {
 	len   int
 	cap   int
-	cache map[string]*doubleNode
-	head  *doubleNode
-	tail  *doubleNode
+	cache map[string]*dNode
+	head  *dNode
+	tail  *dNode
 }
 
-func newLRU(cap int) *lru {
-	head, tail := &doubleNode{data: "dummy head"}, &doubleNode{data: "dummy tail"}
+func NewLRUModel(cap int) *lruModel {
+	head := &dNode{}
+	tail := &dNode{}
+
 	head.next = tail
 	tail.pre = head
-
-	return &lru{
+	return &lruModel{
 		len:   0,
 		cap:   cap,
-		cache: make(map[string]*doubleNode),
+		cache: make(map[string]*dNode),
 		head:  head,
 		tail:  tail,
 	}
 }
 
-func (r *lru) Dump() []string {
-	res := make([]string, 0, r.cap)
-	for n := r.head.next; n != r.tail; n = n.next {
+func (m *lruModel) Get(k string) (string, error) {
+	if n, ok := m.cache[k]; ok {
+		return n.data, nil
+	}
+	return "", fmt.Errorf("key: %s not found ", k)
+}
+
+func (m *lruModel) Put(v string) {
+	if n, ok := m.cache[v]; ok {
+		// move to head.
+		m.move2Head(n)
+		return
+	}
+
+	n := &dNode{
+		data: v,
+	}
+	if m.len == m.cap {
+		m.deleteFromTail()
+	}
+	if err := m.add2Head(n); err != nil {
+		log.Print(err)
+	}
+	return
+}
+
+func (m *lruModel) Dump() []string {
+	res := make([]string, 0, m.len)
+	for n := m.head.next; n != m.tail; n = n.next {
 		res = append(res, n.data)
 	}
 	return res
 }
 
-func (r *lru) Put(k, v string) {
-	n, ok := r.cache[k]
-	if ok {
-		r.move2First(n, v)
-		return
-	}
-
-	if r.len == r.cap {
-		r.removeOne()
-		delete(r.cache, k)
-		node := r.addOne(v)
-		r.cache[k] = node
-		return
-	}
-
-	node := r.addOne(v)
-	r.cache[k] = node
-	r.len++
-	return
-}
-
-func (r *lru) removeOne() {
-	node := r.tail.pre
-	if node == r.head {
-		return
-	}
-	node.pre.next = r.tail
-	r.tail.pre = node
-}
-
-func (r *lru) addOne(v string) *doubleNode {
-	node := &doubleNode{
-		data: v,
-	}
-	nextNode := r.head.next
-	node.next = nextNode
-	nextNode.pre = node
-	r.head.next = node
-	node.pre = r.head
-
-	return node
-}
-
-func (r *lru) move2First(n *doubleNode, v string) {
-	n.data = v
-	if n.pre == r.head {
+func (m *lruModel) move2Head(n *dNode) {
+	if m.head.next == n {
 		return
 	}
 
 	n.pre.next = n.next
 	n.next.pre = n.pre
+	n.next = m.head.next
+	n.pre = m.head
 
-	n.pre = r.head
-	n.next = r.head.next
-	r.head.next = n
+	m.head.next.pre = n
+	m.head.next = n
+}
+
+func (m *lruModel) deleteFromTail() {
+	if m.tail.pre == m.head {
+		return
+	}
+
+	deleteNode := m.tail.pre
+	deleteNode.pre.next = m.tail
+	m.tail.pre = deleteNode.pre
+
+	delete(m.cache, deleteNode.data)
+	m.len--
+}
+
+func (m *lruModel) add2Head(n *dNode) error {
+	if n == nil {
+		return nil
+	}
+	if m.len == m.cap {
+		return errors.New("")
+	}
+
+	n.next = m.head.next
+	n.pre = m.head
+	m.head.next.pre = n
+	m.head.next = n
+
+	m.len++
+	m.cache[n.data] = n
+	return nil
 }
