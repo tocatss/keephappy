@@ -1,6 +1,7 @@
 package backtrack
 
 import (
+	"log"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -54,6 +55,15 @@ func Test_PermuteUnique(t *testing.T) {
 				{1, 1, 2},
 				{1, 2, 1},
 				{2, 1, 1},
+			},
+		},
+		{
+			name:    "unique",
+			payload: []int{1, 2, 2},
+			want: [][]int{
+				{1, 2, 2},
+				{2, 2, 1},
+				{2, 1, 2},
 			},
 		},
 		// 	1122
@@ -158,6 +168,38 @@ func Test_GenerateParenthesis(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			assert.ElementsMatch(t, tt.want, GenerateParenthesis(tt.n))
+		})
+	}
+}
+
+func Test_partition(t *testing.T) {
+	log.Print(partition("aab"))
+}
+
+func Test_GetPermutation(t *testing.T) {
+	tests := []struct {
+		name string
+		n    int
+		k    int
+		want string
+	}{
+		{
+			name: "n=3 k=3 => 213",
+			n:    3,
+			k:    3,
+			want: "213",
+		},
+		{
+			name: "n=4 k=9 => 2314",
+			n:    4,
+			k:    9,
+			want: "2314",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := GetPermutation(tt.n, tt.k)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
