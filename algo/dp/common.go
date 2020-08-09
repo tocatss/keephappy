@@ -1,5 +1,5 @@
 // https://liweiwei1419.gitee.io/leetcode-algo/leetcode-by-tag/dynamic-programming/
-package dynamicprogramming
+package dp
 
 import "fmt"
 
@@ -359,7 +359,7 @@ func minDistanceRecursionWithMemo(word1 string, word2 string) int {
 		}
 		memo   = map[string]int{}
 		genKey = func(i, j int) string {
-			return fmt.Sprint("%d-%d", i, j)
+			return fmt.Sprintf("%d-%d", i, j)
 		}
 	)
 
