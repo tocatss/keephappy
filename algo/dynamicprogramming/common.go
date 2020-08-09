@@ -1,4 +1,7 @@
+// https://liweiwei1419.gitee.io/leetcode-algo/leetcode-by-tag/dynamic-programming/
 package dynamicprogramming
+
+import "fmt"
 
 // dynamic programming 𝑎𝑙𝑠𝑜𝑘𝑛𝑜𝑤𝑛𝑎𝑠𝑑𝑦𝑛𝑎𝑚𝑖𝑐𝑜𝑝𝑡𝑖𝑚𝑖𝑧𝑎𝑡𝑖𝑜𝑛 is a method for solving a complex problem
 // by breaking it down into a collection of simpler subproblems, solving each of those subproblems just once,
@@ -138,7 +141,7 @@ func LengthOfLIS(nums []int) int {
 
 	// dp[n] 到第N个元素的个数
 	dp := make([]int, len(nums))
-	// 找到比index小的最大值所拥有的元素个数。
+	// 找到比index小的元素所拥有最长的上升子序列个数的最大值。
 	maxOfLower := func(index int) int {
 		max := 0
 		target := nums[index]
@@ -230,4 +233,310 @@ func UniquePathsWithObstacles(obstacleGrid [][]int) int {
 	}
 
 	return dp[n-1][m-1]
+}
+
+// 给定一个包含非负整数的 m x n 网格，请找出一条从左上角到右下角的路径，使得路径上的数字总和为最小。
+// 说明：每次只能向下或者向右移动一步。
+// 输入:
+// [
+//   [1,3,1],
+//   [1,5,1],
+//   [4,2,1]
+// ]
+// 输出: 7
+func minPathSum(grid [][]int) int {
+	if len(grid) == 0 || len(grid[0]) == 0 {
+		return 0
+	}
+	n := len(grid)
+	m := len(grid[0])
+
+	to := make([][]int, n)
+	for i := 0; i < n; i++ {
+		to[i] = make([]int, m)
+		copy(to[i], grid[i])
+	}
+
+	for i := 0; i < n; i++ {
+		for j := 0; j < m; j++ {
+			if i == 0 && j == 0 {
+				continue
+			} else if i == 0 {
+				to[i][j] += to[i][j-1]
+			} else if j == 0 {
+				to[i][j] += to[i-1][j]
+			} else {
+				if to[i-1][j] < to[i][j-1] {
+					to[i][j] += to[i-1][j]
+				} else {
+					to[i][j] += to[i][j-1]
+				}
+			}
+		}
+	}
+	return to[n-1][m-1]
+}
+
+// 给你两个单词 word1 和 word2，请你计算出将 word1 转换成 word2 所使用的最少操作数 。
+
+// 你可以对一个单词进行如下三种操作：
+
+// 插入一个字符
+// 删除一个字符
+// 替换一个字符
+//
+
+// 示例 1：
+
+// 输入：word1 = "horse", word2 = "ros"
+// 输出：3
+// 解释：
+// horse -> rorse (将 'h' 替换为 'r')
+// rorse -> rose (删除 'r')
+// rose -> ros (删除 'e')
+
+// s1 => s2的转换方法：一般都是用两个指针 i,j 分别指向两个字符串的最后，然后一步步往前走，缩小问题的规模。
+// https://leetcode-cn.com/circle/article/rY3PIQ/
+func minDistanceRecursion(word1 string, word2 string) int {
+	var (
+		// dp: 返回word1[:i] 和 word2[:j]的最少操作数。
+		dp func(i, j int) int
+		// min: 返回i,j,k中的最小值。
+		min func(i, j, k int) int = func(i, j, k int) int {
+			min := i
+			if j < min {
+				min = j
+			}
+			if k < min {
+				min = k
+			}
+			return min
+		}
+	)
+
+	dp = func(i, j int) int {
+		// word1 的指针移动到头了。
+		if i == -1 {
+			// word2剩下的都插入就好了。
+			return j + 1
+		}
+		if j == -1 {
+			return i + 1
+		}
+
+		// 相等：word1[:i] 和 word2[:j]的最少操作数 就等同于 word1[:i-1] 和 word2[:j-1]的最少操作数.
+		if word1[i] == word2[j] {
+			return dp(i-1, j-1)
+		}
+
+		// 不等，那么我们可以选择 增加，或者删除，或者替换。
+		return min(
+			// 向word1的末尾增加word2[j], 所以j向前。
+			dp(i, j-1)+1,
+			// 删除word1的元素，所以i向前。
+			dp(i-1, j)+1,
+			// word1[i] 替换成word2[j]
+			dp(i-1, j-1)+1,
+		)
+	}
+
+	return dp(len(word1)-1, len(word2)-1)
+}
+
+// 由上例可以发现
+func minDistanceRecursionWithMemo(word1 string, word2 string) int {
+	var (
+		dp  func(i, j int) int
+		min = func(i, j, k int) int {
+			min := i
+			if j < min {
+				min = j
+			}
+			if k < min {
+				min = k
+			}
+			return min
+		}
+		memo   = map[string]int{}
+		genKey = func(i, j int) string {
+			return fmt.Sprint("%d-%d", i, j)
+		}
+	)
+
+	dp = func(i, j int) int {
+		k := genKey(i, j)
+		if v, ok := memo[k]; ok {
+			return v
+		}
+
+		if i == -1 {
+			memo[k] = j + 1
+			return j + 1
+		}
+		if j == -1 {
+			memo[k] = i + 1
+			return i + 1
+		}
+
+		if word1[i] == word2[j] {
+			v := dp(i-1, j-1)
+			memo[k] = v
+			return v
+		}
+
+		v := min(
+			dp(i, j-1)+1,
+			dp(i-1, j)+1,
+			dp(i-1, j-1)+1,
+		)
+		memo[k] = v
+		return v
+	}
+	return dp(len(word1)-1, len(word2)-1)
+}
+
+func minDistanceDP(word1 string, word2 string) int {
+	min := func(i, j, k int) int {
+		min := i
+		if j < min {
+			min = j
+		}
+		if k < min {
+			min = k
+		}
+		return min
+	}
+	// dp 是二维数组用来递进推出 dp[i][j]
+	// dp[i][j] =  min(dp[i-1][j]+1, dp[i][j-1]+1, dp[i-1][j-1]+1,)
+
+	// 初始化
+	dp := make([][]int, len(word1)+1)
+
+	// dp[0][1] ...dp[0][j] => "" ... word2
+	// word1 同理
+	for i := 0; i < len(word1)+1; i++ {
+		dp[i] = make([]int, len(word2)+1)
+		for j := 0; j < len(word2)+1; j++ {
+			if i == 0 && j == 0 {
+				dp[i][j] = 0
+			} else if i == 0 {
+				dp[i][j] = j
+			} else if j == 0 {
+				dp[i][j] = i
+			} else {
+				if word1[i-1] == word2[j-1] {
+					dp[i][j] = dp[i-1][j-1]
+					continue
+				}
+				dp[i][j] = min(
+					dp[i-1][j-1]+1,
+					dp[i][j-1]+1,
+					dp[i-1][j]+1,
+				)
+			}
+		}
+	}
+
+	return dp[len(word1)][len(word2)]
+}
+
+// 给定一个字符串 s，找到 s 中最长的回文子串。你可以假设 s 的最大长度为 1000。
+// 示例 1：
+
+// 输入: "babad"
+// 输出: "bab"
+// 注意: "aba" 也是一个有效答案。
+// 示例 2：
+
+// 输入: "cbbd"
+// 输出: "bb"
+func longestPalindrome(s string) string {
+	if len(s) == 0 {
+		return ""
+	}
+
+	// dp[i][j]: s[i...j]闭区间 是否为回文。
+	// j > i
+	dp := make([][]bool, len(s))
+	for j := 1; j < len(s); j++ {
+		for i := 0; i < j; i++ {
+			if j == i {
+				dp[i][j] = true
+			} else if j <= i+2 {
+				dp[i][j] = s[j] == s[i]
+			} else {
+				if s[j] != s[i] {
+					dp[i][j] = false
+				}
+				dp[i][j] = dp[i+1][j-1]
+			}
+		}
+	}
+	return ""
+}
+
+// No test case because longestCommonSubsequence has passed in leetcode.
+// https://leetcode-cn.com/problems/longest-common-subsequence/
+// 给定两个字符串 text1 和 text2，返回这两个字符串的最长公共子序列的长度。
+// 一个字符串的 子序列 是指这样一个新的字符串：它是由原字符串在不改变字符的相对顺序的情况下删除某些字符（也可以不删除任何字符）后组成的新字符串。
+// 例如，"ace" 是 "abcde" 的子序列，但 "aec" 不是 "abcde" 的子序列。两个字符串的「公共子序列」是这两个字符串所共同拥有的子序列。
+
+// 输入：text1 = "abcde", text2 = "ace"
+// 输出：3
+// 解释：最长公共子序列是 "ace"，它的长度为 3。
+
+// 输入：text1 = "abc", text2 = "def"
+// 输出：0
+// 解释：两个字符串没有公共子序列，返回 0。
+func longestCommonSubsequence(text1 string, text2 string) int {
+	if len(text1) == 0 || len(text2) == 0 {
+		return 0
+	}
+
+	var (
+		findMax = func(p, q int) int {
+			if p > q {
+				return p
+			}
+			return q
+		}
+		// dp[i][j]表示text1[:i+1]和text2[:j+1]中最长的公共子序列
+		dp [][]int
+	)
+	dp = make([][]int, len(text1))
+	for i := 0; i < len(dp); i++ {
+		dp[i] = make([]int, len(text2))
+	}
+
+	for i := 0; i < len(text1); i++ {
+		for j := 0; j < len(text2); j++ {
+			if i == 0 && j == 0 {
+				if text1[i] == text2[j] {
+					dp[i][j] = 1
+					continue
+				}
+				dp[0][0] = 0
+			} else if i == 0 {
+				if text1[i] == text2[j] {
+					dp[i][j] = 1
+					continue
+				}
+				dp[i][j] = dp[i][j-1]
+			} else if j == 0 {
+				if text1[i] == text2[j] {
+					dp[i][j] = 1
+					continue
+				}
+				dp[i][j] = dp[i-1][j]
+			} else {
+				if text1[i] == text2[j] {
+					dp[i][j] = dp[i-1][j-1] + 1
+					continue
+				}
+				dp[i][j] = findMax(dp[i][j-1], dp[i-1][j])
+			}
+		}
+	}
+
+	return dp[len(text1)-1][len(text2)-1]
 }
