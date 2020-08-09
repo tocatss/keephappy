@@ -3,6 +3,7 @@ package dp
 
 import (
 	"fmt"
+	"math"
 )
 
 // dynamic programming 𝑎𝑙𝑠𝑜𝑘𝑛𝑜𝑤𝑛𝑎𝑠𝑑𝑦𝑛𝑎𝑚𝑖𝑐𝑜𝑝𝑡𝑖𝑚𝑖𝑧𝑎𝑡𝑖𝑜𝑛 is a method for solving a complex problem
@@ -554,6 +555,7 @@ func longestCommonSubsequence(text1 string, text2 string) int {
 // 解释：偷窃 1 号房屋 (金额 = 1) ，然后偷窃 3 号房屋 (金额 = 3)。
 //      偷窃到的最高金额 = 1 + 3 = 4 。
 // https://leetcode-cn.com/problems/house-robber/
+// Funtion has passed in leetcode.
 func rob(nums []int) int {
 	switch len(nums) {
 	case 0:
@@ -585,3 +587,85 @@ func rob(nums []int) int {
 	}
 	return dp[len(nums)-1]
 }
+
+// 给定不同面额的硬币 coins 和一个总金额 amount。编写一个函数来计算可以凑成总金额所需的最少的硬币个数。
+// 如果没有任何一种硬币组合能组成总金额，返回 -1。
+// 示例 1:
+// 输入: coins = [1, 2, 5], amount = 11
+// 输出: 3
+// 解释: 11 = 5 + 5 + 1
+//
+// 示例 2:
+// 输入: coins = [2], amount = 3
+// 输出: -1
+// Funtion has passed at leetcode.
+// https://leetcode-cn.com/problems/coin-change/submissions/
+func coinChange(coins []int, amount int) int {
+	if amount == 0 {
+		return 0
+	}
+	// dp[amount] 到amount为止最少的组合次数。
+	// 如果dp[amount-coins[1] 存在
+	// dp[amount] = min(dp[amount-coins[1]] + 1, dp[amount-coins[2]] + 1,...)
+	dp := make([]int, amount+1)
+	for a := 1; a <= amount; a++ {
+		min := math.MaxInt64
+		for i := 0; i < len(coins); i++ {
+			if coins[i] > a {
+				continue
+			}
+			if dp[a-coins[i]] == -1 {
+				continue
+			}
+			// find min.
+			if dp[a-coins[i]]+1 < min {
+				min = dp[a-coins[i]] + 1
+			}
+		}
+		// not found
+		if min == math.MaxInt64 {
+			dp[a] = -1
+			continue
+		}
+
+		dp[a] = min
+	}
+
+	if dp[amount] == 0 {
+		return -1
+	}
+	return dp[amount]
+}
+
+// // 给定不同面额的硬币和一个总金额。写出函数来计算可以凑成总金额的硬币组合数。
+// // 假设每一种面额的硬币有无限个。
+// // 示例 1:
+// // 输入: amount = 5, coins = [1, 2, 5]
+// // 输出: 4
+// // 解释: 有四种方式可以凑成总金额:
+// // 5=5
+// // 5=2+2+1
+// // 5=2+1+1+1
+// // 5=1+1+1+1+1
+
+// // 示例 2:
+// // 输入: amount = 3, coins = [2]
+// // 输出: 0
+// // 解释: 只用面额2的硬币不能凑成总金额3。
+// // https://leetcode-cn.com/problems/coin-change-2
+// func change(amount int, coins []int) int {
+// 	if amount == 0 {
+// 		return 0
+// 	}
+
+// 	// dp[i]: 凑成总值为i的个数
+// 	dp := make([]int, amount+1)
+// 	for i := 1; i < amount; i++ {
+// 		for j := 0; j < len(coins); j++ {
+// 			if coins[j] > i {
+// 				continue
+// 			}
+
+// 		}
+// 	}
+// }
