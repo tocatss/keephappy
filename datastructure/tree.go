@@ -100,3 +100,34 @@ func (ds *dataSource) shift() (string, error) {
 	ds.data = ds.data[1:]
 	return v, nil
 }
+
+type TreeNode struct {
+	Val   int
+	Left  *TreeNode
+	Right *TreeNode
+}
+
+func levelOrder(root *TreeNode) [][]int {
+	var (
+		dfs func(node *TreeNode, level int)
+		ans [][]int
+	)
+
+	dfs = func(node *TreeNode, level int) {
+		if node == nil {
+			return
+		}
+
+		if level > len(ans)-1 {
+			ans = append(ans, []int{node.Val})
+		} else {
+			ans[level] = append(ans[level], node.Val)
+		}
+
+		dfs(node.Left, level+1)
+		dfs(node.Right, level+1)
+	}
+
+	dfs(root, 0)
+	return ans
+}
