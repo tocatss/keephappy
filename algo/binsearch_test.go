@@ -1,4 +1,4 @@
-package binsearch
+package algo
 
 import (
 	"testing"
@@ -13,6 +13,12 @@ func Test_SimpleSearch(t *testing.T) {
 		target int
 		want   int
 	}{
+		{
+			name:   "find 6 from [1,3,5,7]",
+			nums:   []int{1, 3, 5, 6, 7},
+			target: 6,
+			want:   3,
+		},
 		{
 			name:   "find 2 from [1,2,2,2,3]",
 			nums:   []int{1, 2, 2, 2, 3},

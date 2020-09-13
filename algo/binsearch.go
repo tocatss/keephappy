@@ -1,4 +1,4 @@
-package binsearch
+package algo
 
 // Although the basic idea of binary search is comparatively straightforward,
 // the details can be surprisingly tricky...
@@ -20,9 +20,9 @@ func SimpleSearch(nums []int, target int) int {
 		case nums[mid] == target:
 			return mid
 		case nums[mid] < target:
-			right = mid - 1
-		case nums[mid] > target:
 			left = mid + 1
+		case nums[mid] > target:
+			right = mid - 1
 		}
 	}
 	return -1

@@ -1,5 +1,5 @@
 // https://liweiwei1419.gitee.io/leetcode-algo/leetcode-by-tag/dynamic-programming/
-package dp
+package algo
 
 import (
 	"fmt"
