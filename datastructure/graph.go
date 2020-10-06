@@ -1,6 +1,9 @@
 package datastructure
 
-import "log"
+import (
+	"log"
+	"math"
+)
 
 type graph struct {
 	numVexes int
@@ -102,4 +105,77 @@ func bfs(ns []*node, graph map[string][]string, visited map[string]bool, want st
 		}
 	}
 	return nil
+}
+
+// 狄杰斯特拉计算加权图的最短路径
+// 1. 找到当前可访问到的cost最小的点。
+// 2. 从该节点出发，找到其相邻节点并更新开销
+// 3. 重复1，2直至检查到所有节点。
+func Dijkstra(graph map[string]map[string]int, from, to string) int {
+	if _, ok := graph[from]; !ok {
+		return -1
+	}
+	if from == to {
+		return 0
+	}
+
+	var (
+		parents = make(map[string]string)
+		costs   = make(map[string]int)
+		visited = make(map[string]bool)
+	)
+
+	// init
+	for k, v := range graph[from] {
+		costs[k] = v
+		parents[k] = from
+	}
+	weight := -1
+
+	for n := findNextNode(costs, visited, weight); n != ""; n = findNextNode(costs, visited, weight) {
+		log.Print("next", n)
+		visited[n] = true
+		weight = costs[n]
+
+		base := costs[n]
+		g, ok := graph[n]
+		if !ok {
+			continue
+		}
+		for k, v := range g {
+			nv := base + v
+
+			origin, ok := costs[k]
+			if !ok || nv < origin {
+				// 更新权重。
+				costs[k] = nv
+				// 更新父亲。
+				parents[k] = n
+			}
+		}
+	}
+
+	cost, ok := costs[to]
+	if !ok {
+		return -1
+	}
+	return cost
+}
+
+func findNextNode(costs map[string]int, visited map[string]bool, weight int) string {
+	min := math.MaxInt64
+	res := ""
+
+	for k, v := range costs {
+		if visited[k] || v < weight {
+			continue
+		}
+
+		if v < min {
+			min = v
+			res = k
+		}
+	}
+
+	return res
 }
