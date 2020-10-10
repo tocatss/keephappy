@@ -1,6 +1,6 @@
 module leetcode
 
-go 1.14
+go 1.15
 
 require (
 	github.com/go-redis/redis/v7 v7.2.0
