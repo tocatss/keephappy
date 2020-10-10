@@ -127,21 +127,40 @@ func CompletePack(max int, vs, cs map[string]int) int {
 }
 
 func CompletePackOptimization(max int, vs, cs map[string]int) int {
-	dp := make([]int, max+1)
-	for k := range vs {
-		cost := cs[k]
-		value := vs[k]
+	// 01 背包中要按照 v 递减的次序来循环。 让 v 递减是为了保证第 i 次循环中的状态 F[i,v] 是由状态 F[i − 1,v − Ci] 递推而来。
+	// 换句话说，这正是为了保证每件物品只选一次，保证在考虑“选入第 i 件物品”这件策 略时，依据的是一个绝无已经选入第 i 件物品的子结果 F [i − 1, v − Ci]。
+	// 而现在完全背 包的特点恰是每种物品可选无限件，所以在考虑“加选一件第 i 种物品”这种策略时， 却正需要一个可能已选入第 i 种物品的子结果 F [i, v − Ci ]
+	// 所以就可以并且必须采用 v 递增的顺序循环。这就是这个简单的程序为何成立的道理。
 
-		for i := max; i >= cost; i-- {
-			m := 0
-			for n := 0; n*cost <= i; n++ {
-				nv := dp[i-n*cost] + n*value
-				if nv > m {
-					m = nv
-				}
+	// 递增 dp[i] 代表容量为i时当前的最大价值。
+	dp := make([]int, max+1)
+	for k, v := range vs {
+		cost := cs[k]
+		for i := cost; i <= max; i++ {
+			after := dp[i-cost] + v
+			if dp[i] < after {
+				dp[i] = after
 			}
-			dp[i] = m
 		}
 	}
 	return dp[max]
+
+	// 递减
+	// dp := make([]int, max+1)
+	// for k := range vs {
+	// 	cost := cs[k]
+	// 	value := vs[k]
+
+	// 	for i := max; i >= cost; i-- {
+	// 		m := 0
+	// 		for n := 0; n*cost <= i; n++ {
+	// 			nv := dp[i-n*cost] + n*value
+	// 			if nv > m {
+	// 				m = nv
+	// 			}
+	// 		}
+	// 		dp[i] = m
+	// 	}
+	// }
+	// return dp[max]
 }
