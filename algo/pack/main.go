@@ -164,3 +164,88 @@ func CompletePackOptimization(max int, vs, cs map[string]int) int {
 	// }
 	// return dp[max]
 }
+
+// 多重背包问题
+// 问题 有 N 种物品和一个容量为 V 的背包。第 i 种物品最多有 Mi 件可用，每件耗费的 空间是 Ci，价值是 Wi。
+//     求解将哪些物品装入背包可使这些物品的耗费的空间总和不超 过背包容量，且价值总和最大。
+
+// 这题目和完全背包问题很类似。基本的方程只需将完全背包问题的方程略微一改 即可。
+// 因为对于第 i 种物品有 Mi +1 种策略:取 0 件，取 1 件......取 Mi 件。令 F[i,v] 表示前 i 种物品恰放入一个容量为 v 的背包的最大价值，则有状态转移方程:
+// F [i，v] = max{F [i − 1, v − k ∗ Ci] + k ∗ Wi | 0 ≤ k ≤ Mi} 复杂度是 O(V ΣMi)。
+
+func MultiplePack(max int, vs, cs, ns map[string]int) int {
+	if max <= 0 || len(vs) == 0 {
+		return 0
+	}
+
+	dp := make([][]int, len(vs)+1)
+
+	// init
+	dp[0] = make([]int, max+1)
+	i := 1
+	ik := make(map[int]string, len(vs))
+	for k := range vs {
+		dp[i] = make([]int, max+1)
+		ik[i] = k
+		i++
+	}
+
+	for i := 1; i < len(dp); i++ {
+		k := ik[i]
+
+		cost := cs[k]
+		value := vs[k]
+		number := ns[k] // 最大件数
+		for j := 1; j <= max; j++ {
+			m := dp[i-1][j]
+			for n := 0; n*cost <= j && n <= number; n++ {
+				after := dp[i-1][j-n*cost] + n*value
+				if after > m {
+					m = after
+				}
+			}
+			dp[i][j] = m
+		}
+	}
+
+	return dp[len(vs)][max]
+}
+
+func MultiplePackOptimization(max int, vs, cs, ns map[string]int) int {
+	dp := make([]int, max+1)
+
+	for k, v := range vs {
+		cost := cs[k]
+		number := ns[k]
+		for i := cost; i <= max && number > 0; i++ {
+			after := dp[i-cost] + v
+			if after > dp[i] {
+				dp[i] = after
+				number--
+			}
+		}
+	}
+
+	return dp[max]
+
+	// 递减
+	// dp := make([]int, max+1)
+
+	// for k, v := range vs {
+	// 	cost := cs[k]
+	// 	number := ns[k]
+
+	// 	for i := max; i >= cost; i-- {
+	// 		m := 0
+	// 		for n := 0; n*cost <= i && n <= number; n++ {
+	// 			after := dp[i-n*cost] + n*v
+	// 			if after > m {
+	// 				m = after
+	// 			}
+	// 		}
+	// 		dp[i] = m
+	// 	}
+	// }
+
+	// return dp[max]
+}

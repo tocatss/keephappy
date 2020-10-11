@@ -131,3 +131,84 @@ func TestCompletePack(t *testing.T) {
 		})
 	}
 }
+
+func TestMultiplePack(t *testing.T) {
+	tests := []struct {
+		name     string
+		packCaps int
+		vs       map[string]int
+		cs       map[string]int
+		ns       map[string]int
+		want     int
+	}{
+		{
+			name:     "select 6*b",
+			packCaps: 6,
+			vs: map[string]int{
+				"a": 1,
+				"b": 2,
+				"c": 5,
+			},
+			cs: map[string]int{
+				"a": 2,
+				"b": 1,
+				"c": 6,
+			},
+			ns: map[string]int{
+				"a": 100,
+				"b": 100,
+				"c": 100,
+			},
+			want: 12,
+		},
+		{
+			name:     "select c",
+			packCaps: 6,
+			vs: map[string]int{
+				"a": 1,
+				"b": 2,
+				"c": 5,
+			},
+			cs: map[string]int{
+				"a": 2,
+				"b": 1,
+				"c": 6,
+			},
+			ns: map[string]int{
+				"a": 2,
+				"b": 1,
+				"c": 1,
+			},
+			want: 5,
+		},
+		{
+			name:     "select c",
+			packCaps: 6,
+			vs: map[string]int{
+				"a": 1,
+				"b": 2,
+				"c": 13,
+				"d": 12,
+			},
+			cs: map[string]int{
+				"a": 2,
+				"b": 1,
+				"c": 6,
+				"d": 5,
+			},
+			ns: map[string]int{
+				"a": 100,
+				"b": 0,
+				"c": 100,
+				"d": 100,
+			},
+			want: 13,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, MultiplePack(tt.packCaps, tt.vs, tt.cs, tt.ns))
+			assert.Equal(t, tt.want, MultiplePackOptimization(tt.packCaps, tt.vs, tt.cs, tt.ns))
+		})
+	}
+}
