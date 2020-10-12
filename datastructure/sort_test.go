@@ -150,3 +150,75 @@ func TestSort_heapSort(t *testing.T) {
 		})
 	}
 }
+
+func TestSort_DivideAndMerge(t *testing.T) {
+	tests := []struct {
+		name string
+		s    []int
+		want []int
+	}{
+		{
+			name: "want 1,2,3,5,7",
+			s:    []int{1, 3, 2, 7, 5},
+			want: []int{1, 2, 3, 5, 7},
+		},
+		{
+			name: "want 1,2,3",
+			s:    []int{2, 3, 1},
+			want: []int{1, 2, 3},
+		},
+		{
+			name: "want 2,2",
+			s:    []int{2, 1, 0, 2},
+			want: []int{0, 1, 2, 2},
+		},
+		{
+			name: "want 1",
+			s:    []int{1},
+			want: []int{1},
+		},
+		{
+			name: "want []",
+			s:    nil,
+			want: nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, DivideAndMerge(tt.s))
+		})
+	}
+}
+
+func TestSort_QuickSort(t *testing.T) {
+	tests := []struct {
+		name string
+		s    []int
+		want []int
+	}{
+		{
+			name: "1",
+			s:    []int{1},
+			want: []int{1},
+		},
+		{
+			name: "21 => 12",
+			s:    []int{2, 1},
+			want: []int{1, 2},
+		},
+		{
+			s:    []int{2, 1, 5, 3, 7},
+			want: []int{1, 2, 3, 5, 7},
+		},
+		{
+			s:    []int{2, 1, 5, 3, 7, 6},
+			want: []int{1, 2, 3, 5, 6, 7},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, QuickSort(tt.s))
+		})
+	}
+}

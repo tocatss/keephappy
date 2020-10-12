@@ -74,3 +74,81 @@ func (s *sortAble) swap(i, j int) {
 	s.data[i] = s.data[j]
 	s.data[j] = t
 }
+
+// 归并排序
+func DivideAndMerge(s []int) []int {
+	half := len(s) / 2
+	if half == 0 {
+		return s
+	}
+
+	s1 := DivideAndMerge(s[:half])
+	s2 := DivideAndMerge(s[half:])
+
+	return merge(s1, s2)
+}
+
+func merge(s1, s2 []int) []int {
+	i, j := 0, 0
+
+	res := make([]int, 0, len(s1)+len(s2))
+
+	for i < len(s1) || j < len(s2) {
+		if i == len(s1) {
+			res = append(res, s2[j:]...)
+			break
+		}
+		if j == len(s2) {
+			res = append(res, s1[i:]...)
+			break
+		}
+
+		if s1[i] < s2[j] {
+			res = append(res, s1[i])
+			i++
+		} else {
+			res = append(res, s2[j])
+			j++
+		}
+	}
+
+	return res
+}
+
+// 快排
+func QuickSort(s []int) []int {
+	if len(s) < 2 {
+		return s
+	}
+	if len(s) == 2 {
+		if s[0] > s[1] {
+			return []int{s[1], s[0]}
+		}
+		return []int{s[0], s[1]}
+	}
+
+	half := len(s) / 2
+	left := make([]int, 0, len(s))
+	right := make([]int, 0, len(s))
+	for i := 0; i < len(s); i++ {
+		if i == half {
+			continue
+		}
+
+		if s[i] < s[half] {
+			left = append(left, s[i])
+			continue
+		}
+		right = append(right, s[i])
+	}
+
+	lSorted := QuickSort(left)
+	rSorted := QuickSort(right)
+
+	res := make([]int, 0, len(s))
+	res = append(res, lSorted...)
+	res = append(res, s[half])
+	res = append(res, rSorted...)
+
+	return res
+}
