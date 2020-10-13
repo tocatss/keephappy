@@ -1812,3 +1812,98 @@ func findOrder(numCourses int, prerequisites [][]int) []int {
 	}
 	return nil
 }
+
+// 后缀表达式求值
+// 遇到数字进栈，操作符弹出栈顶两个元素计算后再入栈。
+func ComputeSuffix(suffix []string) int {
+	stack := make([]int, 0, len(suffix))
+
+	for i := 0; i < len(suffix); i++ {
+		s := strings.TrimSpace(suffix[i])
+		v, err := strconv.Atoi(s)
+		if err == nil {
+			stack = append(stack, v)
+			continue
+		}
+
+		ss := make([]int, len(stack)-2, len(stack)-1)
+		copy(ss, stack[:len(stack)-2])
+
+		if s == "+" {
+			ss = append(ss, stack[len(stack)-2]+stack[len(stack)-1])
+		} else if s == "-" {
+			ss = append(ss, stack[len(stack)-2]-stack[len(stack)-1])
+		} else if s == "*" {
+			ss = append(ss, stack[len(stack)-2]*stack[len(stack)-1])
+		} else if s == "/" {
+			// FIXME: 假设可以整除
+			ss = append(ss, stack[len(stack)-2]/stack[len(stack)-1])
+		} else {
+			panic("incorrect value")
+		}
+
+		stack = ss
+
+	}
+
+	return stack[0]
+}
+
+// 中缀转后缀
+// 准备两个栈(s1,s2),一个用于存数字一个用来存操作符
+func Convert2Suffix(infix []string) []string {
+	s1, s2 := make([]string, 0, len(infix)), make([]string, 0, len(infix))
+
+	for _, v := range infix {
+		// number?
+		if _, err := strconv.Atoi(v); err == nil {
+			s1 = append(s1, v)
+			continue
+		}
+
+		if len(s2) == 0 || s2[len(s2)-1] == "(" {
+			s2 = append(s2, v)
+			continue
+		}
+
+		switch v {
+		case "(":
+			s2 = append(s2, v)
+		case "+", "-":
+			i := len(s2) - 1
+			for i >= 0 && s2[i] != "(" {
+				s1 = append(s1, s2[i])
+				i--
+			}
+			s2 = s2[:i+1]
+			s2 = append(s2, v)
+		case "*", "/":
+			if s2[len(s2)-1] == "+" || s2[len(s2)-1] == "-" {
+				s2 = append(s2, v)
+				continue
+			}
+			s1 = append(s1, s2[len(s2)-1])
+			s2[len(s2)-1] = v
+		case ")":
+			i := len(s2) - 1
+			for {
+				if i < 0 {
+					panic("unexpect error")
+				}
+				if s2[i] == "(" {
+					s2 = s2[:i]
+					break
+				}
+
+				s1 = append(s1, s2[i])
+				i--
+			}
+		}
+	}
+
+	for i := len(s2) - 1; i >= 0; i-- {
+		s1 = append(s1, s2[i])
+	}
+
+	return s1
+}

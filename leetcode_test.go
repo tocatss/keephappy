@@ -15,104 +15,101 @@ func Test_AddTwoNumbers(t *testing.T) {
 		l2   *ListNode
 		want *ListNode
 	}{
+		// {
+		// 	"7 -> 0 -> 8 = (2 -> 4 -> 3) + (5 -> 6 -> 4)",
+		// 	&ListNode{
+		// 		2,
+		// 		&ListNode{
+		// 			4,
+		// 			&ListNode{
+		// 				3,
+		// 				nil,
+		// 			},
+		// 		},
+		// 	},
+		// 	&ListNode{
+		// 		5,
+		// 		&ListNode{
+		// 			6,
+		// 			&ListNode{
+		// 				4,
+		// 				nil,
+		// 			},
+		// 		},
+		// 	},
+		// 	&ListNode{
+		// 		7,
+		// 		&ListNode{
+		// 			0,
+		// 			&ListNode{
+		// 				8,
+		// 				nil,
+		// 			},
+		// 		},
+		// 	},
+		// },
+		// {
+		// 	"0 -> 3 -> 1 = (2 -> 4) + (8 -> 8)",
+		// 	&ListNode{
+		// 		2,
+		// 		&ListNode{
+		// 			4,
+		// 			nil,
+		// 		},
+		// 	},
+		// 	&ListNode{
+		// 		8,
+		// 		&ListNode{
+		// 			8,
+		// 			nil,
+		// 		},
+		// 	},
+		// 	&ListNode{
+		// 		0,
+		// 		&ListNode{
+		// 			3,
+		// 			&ListNode{
+		// 				1,
+		// 				nil,
+		// 			},
+		// 		},
+		// 	},
+		// },
+		// {
+		// 	"2 -> 4  = (2 -> 4) + (0)",
+		// 	&ListNode{
+		// 		2,
+		// 		&ListNode{
+		// 			4,
+		// 			nil,
+		// 		},
+		// 	},
+		// 	&ListNode{
+		// 		0,
+		// 		nil,
+		// 	},
+		// 	&ListNode{
+		// 		2,
+		// 		&ListNode{
+		// 			4,
+		// 			nil,
+		// 		},
+		// 	},
+		// },
 		{
-			"7 -> 0 -> 8 = (2 -> 4 -> 3) + (5 -> 6 -> 4)",
+			"1 -> 0  = 5 + 5",
 			&ListNode{
-				2,
-				&ListNode{
-					4,
-					&ListNode{
-						3,
-						nil,
-					},
-				},
+				5,
+				nil,
 			},
 			&ListNode{
 				5,
-				&ListNode{
-					6,
-					&ListNode{
-						4,
-						nil,
-					},
-				},
+				nil,
 			},
 			&ListNode{
-				7,
+				1,
 				&ListNode{
 					0,
-					&ListNode{
-						8,
-						nil,
-					},
-				},
-			},
-		},
-		{
-			"0 -> 3 -> 1 = (2 -> 4) + (8 -> 8)",
-			&ListNode{
-				2,
-				&ListNode{
-					4,
-					nil,
-				},
-			},
-			&ListNode{
-				8,
-				&ListNode{
-					8,
-					nil,
-				},
-			},
-			&ListNode{
-				0,
-				&ListNode{
-					3,
-					&ListNode{
-						1,
-						nil,
-					},
-				},
-			},
-		},
-		{
-			"2 -> 4  = (2 -> 4) + (0)",
-			&ListNode{
-				2,
-				&ListNode{
-					4,
-					nil,
-				},
-			},
-			&ListNode{
-				0,
-				nil,
-			},
-			&ListNode{
-				2,
-				&ListNode{
-					4,
-					nil,
-				},
-			},
-		},
-		{
-			"2 -> 4  = (0) + (2 -> 4)",
-			&ListNode{
-				0,
-				nil,
-			},
-			&ListNode{
-				2,
-				&ListNode{
-					4,
-					nil,
-				},
-			},
-			&ListNode{
-				2,
-				&ListNode{
-					4,
 					nil,
 				},
 			},
@@ -1585,6 +1582,71 @@ func Test_findOrder(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			assert.Equal(t, tt.want, findOrder(tt.numCourses, tt.prerequisites))
+		})
+	}
+}
+
+func Test_ComputeSuffix(t *testing.T) {
+	tests := []struct {
+		name   string
+		suffix []string
+		want   int
+	}{
+		{
+			name:   "1+2+3 => 12+3+ => 6",
+			suffix: []string{"1", "2", "+", "3", "+"},
+			want:   6,
+		},
+		{
+			name:   "1+2x3 => 123x+ => 7",
+			suffix: []string{"1", "2", "3", "*", "+"},
+			want:   7,
+		},
+		{
+			name:   "1+2x3-10 => 123x+10- => 6",
+			suffix: []string{"1", "2", "3", "*", "+", "10", "-"},
+			want:   -3,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, ComputeSuffix(tt.suffix))
+		})
+	}
+}
+
+func Test_Convert2Suffix(t *testing.T) {
+	tests := []struct {
+		name  string
+		infix []string
+		want  []string
+	}{
+		{
+			name:  "1+2+3 => 12+3+",
+			infix: []string{"1", "+", "2", "+", "3"},
+			want:  []string{"1", "2", "+", "3", "+"},
+		},
+		{
+			name:  "1+2x3 => 123x+",
+			infix: []string{"1", "+", "2", "*", "3"},
+			want:  []string{"1", "2", "3", "*", "+"},
+		},
+		{
+			name:  "1+2x3-10 => 123x+10-",
+			infix: []string{"1", "+", "2", "*", "3", "-", "10"},
+			want:  []string{"1", "2", "3", "*", "+", "10", "-"},
+		},
+		{
+			name:  "1+2x(3-10) => 12310-x+",
+			infix: []string{"1", "+", "2", "*", "(", "3", "-", "10", ")"},
+			want:  []string{"1", "2", "3", "10", "-", "*", "+"},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, Convert2Suffix(tt.infix))
 		})
 	}
 }
