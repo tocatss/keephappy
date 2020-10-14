@@ -15,89 +15,8 @@ func Test_AddTwoNumbers(t *testing.T) {
 		l2   *ListNode
 		want *ListNode
 	}{
-		// {
-		// 	"7 -> 0 -> 8 = (2 -> 4 -> 3) + (5 -> 6 -> 4)",
-		// 	&ListNode{
-		// 		2,
-		// 		&ListNode{
-		// 			4,
-		// 			&ListNode{
-		// 				3,
-		// 				nil,
-		// 			},
-		// 		},
-		// 	},
-		// 	&ListNode{
-		// 		5,
-		// 		&ListNode{
-		// 			6,
-		// 			&ListNode{
-		// 				4,
-		// 				nil,
-		// 			},
-		// 		},
-		// 	},
-		// 	&ListNode{
-		// 		7,
-		// 		&ListNode{
-		// 			0,
-		// 			&ListNode{
-		// 				8,
-		// 				nil,
-		// 			},
-		// 		},
-		// 	},
-		// },
-		// {
-		// 	"0 -> 3 -> 1 = (2 -> 4) + (8 -> 8)",
-		// 	&ListNode{
-		// 		2,
-		// 		&ListNode{
-		// 			4,
-		// 			nil,
-		// 		},
-		// 	},
-		// 	&ListNode{
-		// 		8,
-		// 		&ListNode{
-		// 			8,
-		// 			nil,
-		// 		},
-		// 	},
-		// 	&ListNode{
-		// 		0,
-		// 		&ListNode{
-		// 			3,
-		// 			&ListNode{
-		// 				1,
-		// 				nil,
-		// 			},
-		// 		},
-		// 	},
-		// },
-		// {
-		// 	"2 -> 4  = (2 -> 4) + (0)",
-		// 	&ListNode{
-		// 		2,
-		// 		&ListNode{
-		// 			4,
-		// 			nil,
-		// 		},
-		// 	},
-		// 	&ListNode{
-		// 		0,
-		// 		nil,
-		// 	},
-		// 	&ListNode{
-		// 		2,
-		// 		&ListNode{
-		// 			4,
-		// 			nil,
-		// 		},
-		// 	},
-		// },
 		{
-			"1 -> 0  = 5 + 5",
+			"5 + 5 => 0 -> 1",
 			&ListNode{
 				5,
 				nil,
@@ -107,9 +26,9 @@ func Test_AddTwoNumbers(t *testing.T) {
 				nil,
 			},
 			&ListNode{
-				1,
+				0,
 				&ListNode{
-					0,
+					1,
 					nil,
 				},
 			},
