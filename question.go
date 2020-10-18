@@ -2002,3 +2002,25 @@ func MaximumMatching(input string, m map[string]interface{}) []string {
 
 	return ans
 }
+
+// 欧几里得算法（辗转相除求最大公因数）
+// 两个正整数的最大公因数等于小的和余数的最大公因数。
+// 以除数和余数反复做除法运算，当余数为 0 时，取当前算式除数为最大公约数
+func Gcd(a, b int) int {
+	if a <= 0 || b <= 0 {
+		return -1
+	}
+	if a < b {
+		a, b = b, a
+	}
+
+	var gcd func(a, b int) int
+	gcd = func(a, b int) int {
+		if b == 0 {
+			return a
+		}
+		return gcd(b, a%b)
+	}
+
+	return gcd(a, b)
+}

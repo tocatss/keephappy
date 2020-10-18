@@ -1664,3 +1664,42 @@ func Test_MaximumMatching(t *testing.T) {
 		})
 	}
 }
+
+func Test_Gcd(t *testing.T) {
+	tests := []struct {
+		name string
+		a    int
+		b    int
+		want int
+	}{
+		{
+			name: "2 and 3 => 1",
+			a:    2,
+			b:    3,
+			want: 1,
+		},
+		{
+			name: "24 and 36 => 12",
+			a:    24,
+			b:    36,
+			want: 12,
+		},
+		{
+			name: "24 and 8 => 8",
+			a:    8,
+			b:    24,
+			want: 8,
+		},
+		{
+			name: "invalid: 24 and 0 => -1",
+			a:    0,
+			b:    24,
+			want: -1,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, Gcd(tt.a, tt.b))
+		})
+	}
+}
