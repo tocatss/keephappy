@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"container/heap"
 	"errors"
+	"fmt"
 	"log"
 	"math"
 	"sort"
@@ -942,36 +943,44 @@ func printLink(l *ListNode) {
 }
 
 func reverseKGroup(head *ListNode, k int) *ListNode {
-	var (
-		hasLenKAfterHead func(head *ListNode) bool = func(head *ListNode) bool {
-			crt := head.Next
-			for kk := k; kk > 0; kk-- {
-				if crt == nil {
-					return false
-				}
-				crt = crt.Next
-			}
-			return true
-		}
-		move2Head func(head *ListNode, times int) *ListNode = func(head *ListNode, times int) *ListNode {
-			crt := head.Next
-			for ; times > 0; times-- {
-				next := crt.Next
-				crt.Next = next.Next
-				next.Next = head.Next
-				head.Next = next
-			}
-			return crt
-		}
-	)
-
-	// 1->2->3->4
-	// k=2 2->1->4->3
-	dummy := &ListNode{Next: head}
-	p := dummy
-	for hasLenKAfterHead(p) {
-		p = move2Head(p, k-1)
+	if k <= 1 {
+		return head
 	}
+
+	dummy := &ListNode{
+		Next: head,
+	}
+	p := dummy
+
+	revertK := func() {
+		newTail := p.Next
+		for i := 0; i < k-1; i++ {
+			left, right := newTail, newTail.Next
+
+			left.Next = right.Next
+			right.Next = p.Next
+			p.Next = right
+		}
+		p = newTail
+	}
+	hasK := func() bool {
+		n := p.Next
+		for i := 0; i < k; i++ {
+			if n == nil {
+				return false
+			}
+			n = n.Next
+		}
+		return true
+	}
+
+	for {
+		if !hasK() {
+			break
+		}
+		revertK()
+	}
+
 	return dummy.Next
 }
 
@@ -1728,7 +1737,7 @@ func ReverseKGroupAgain(head *ListNode, k int) *ListNode {
 // 给定课程总量以及它们的先决条件，返回你为了学完所有课程所安排的学习顺序。
 // 可能会有多个正确的顺序，你只要返回一种就可以了。如果不可能完成所有课程，返回一个空数组。
 
-// 拓扑排序： 把有向无环图 变成 线性的排序。
+// 排序： 把有向无环图 变成 线性的排序。
 func findOrder(numCourses int, prerequisites [][]int) []int {
 	inDegree := make([]int, numCourses)
 	graph := make(map[int][]int)
@@ -1875,4 +1884,82 @@ func Convert2Suffix(infix []string) []string {
 	}
 
 	return s1
+}
+
+// IP地址一般是一个32位的二进制数
+// 如果将IP地址转换成二进制表示应该有32为那么长但是它通常被分割为4个“8位二进制数”（也就是4个字节每，每个代表的就是小于2的8 次方）。
+// IP地址通常用“点分十进制”表示成（a.b.c.d）的形式，其中，a,b,c,d都是0~255之间的十进制整数。
+// 例：点分十进IP地址（100.4.5.6），实际上是32位二进制数（01100100.00000100.00000101.00000110）
+func Ip2Number(s string) int {
+	ss := strings.Split(s, ".")
+	if len(ss) != 4 {
+		return -1
+	}
+	nums := make([]int, 4)
+	for i := 0; i < 4; i++ {
+		v, err := strconv.Atoi(ss[i])
+		if err != nil {
+			return -1
+		}
+		nums[i] = v
+	}
+
+	// nums[0] * 2^24 + nums[1] * 2^16 + nums[2] * 2^8 + nums[1]
+	// return nums[0]*256*256*256 + nums[1]*256*256 + nums[2]*256 + nums[3]
+	return nums[0]<<24 + nums[1]<<16 + nums[2]<<8 + nums[3]
+}
+
+func Number2Ip(num int) string {
+	if num < 0 || num > math.MaxUint32 {
+		return ""
+	}
+
+	ans := make([]string, 4)
+	for i := 0; i < 4; i++ {
+		n := num
+		switch i {
+		case 0:
+			ans[i] = strconv.Itoa(n >> 24)
+		case 1:
+			ans[i] = strconv.Itoa(n >> 16 & 255)
+		case 2:
+			ans[i] = strconv.Itoa(n >> 8 & 255)
+		case 3:
+			ans[i] = strconv.Itoa(n & 255)
+		}
+	}
+
+	return strings.Join(ans, ".")
+}
+
+// 汉诺塔
+// 一股脑地考虑每一步如何移动很困难，我们可以换个思路。先假设一共10个盘子除最下面的盘子之外，我们已经成功地将上面的9个盘子移到了b柱，此时只要将最下面的盘子由a移动到c即可。
+// 接下来将b柱作为起始，将8个成功移到a把第九个移动到c即可。
+// 规律：即每次都是先将其他圆盘移动到辅助柱子上，并将最底下的圆盘移到c柱子上，然后再把原先的柱子作为辅助柱子，并重复此过程。
+func Hanoi(n int) int {
+	var (
+		res    int
+		move   func(index int, from, to string)
+		hannoi func(nums int, from, by, to string)
+	)
+
+	move = func(index int, from, to string) {
+		res++
+		fmt.Printf("MOVE %d FROM %s TO %s\n", index, from, to)
+	}
+	hannoi = func(nums int, from, by, to string) {
+		if nums == 1 {
+			move(1, from, to)
+			return
+		}
+
+		hannoi(nums-1, from, to, by) //将前n-1块经由c挪到b
+		move(nums, from, to)         // 将第n块挪到c
+		hannoi(nums-1, by, from, to) // 将剩下的n-1块经由a挪到c
+	}
+
+	hannoi(n, "A", "B", "C")
+
+	fmt.Println("OK")
+	return res
 }

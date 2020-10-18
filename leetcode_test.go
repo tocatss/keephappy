@@ -1569,3 +1569,54 @@ func Test_Convert2Suffix(t *testing.T) {
 		})
 	}
 }
+
+func Test_IPConvert(t *testing.T) {
+	tests := []struct {
+		name    string
+		address string
+		number  int
+	}{
+		// 下面的网站可以做转换验证。
+		// http://www.ab173.com/net/ip2int.php
+		{
+			name:    "0.2.3.1 => 131841 => 0.2.3.1",
+			address: "0.2.3.1",
+			number:  131841,
+		},
+		{
+			name:    "",
+			address: "255.255.255.1",
+			number:  4294967041,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.number, Ip2Number(tt.address))
+			assert.Equal(t, tt.address, Number2Ip(tt.number))
+		})
+	}
+}
+
+func Test_Hanoi(t *testing.T) {
+	tests := []struct {
+		name string
+		n    int
+		want int // 步数
+	}{
+		{
+			name: "3 个盘子",
+			n:    3,
+			want: 7,
+		},
+		{
+			name: "4 个盘子",
+			n:    4,
+			want: 15,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, Hanoi(tt.n))
+		})
+	}
+}
