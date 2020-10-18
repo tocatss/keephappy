@@ -1620,3 +1620,47 @@ func Test_Hanoi(t *testing.T) {
 		})
 	}
 }
+
+func Test_MaximumMatching(t *testing.T) {
+	tests := []struct {
+		name  string
+		m     map[string]interface{}
+		input string
+		want  []string
+	}{
+		{
+			name: "MaximumMatching with rune",
+			m: map[string]interface{}{
+				"今天":   nil,
+				"天气真好": nil,
+				"天气":   nil,
+				"真好":   nil,
+				"我们":   nil,
+				"出去玩耍": nil,
+				"出去":   nil,
+				"玩耍":   nil,
+			},
+			input: "今天的天气真好我们出去玩耍吧",
+			want:  []string{"今天", "的", "天气真好", "我们", "出去玩耍", "吧"},
+		},
+		{
+			name: "MaximumMatching with byte",
+			m: map[string]interface{}{
+				"bc":     nil,
+				"bcde":   nil,
+				"bcdek":  nil,
+				"deskld": nil,
+				"kld":    nil,
+				"kl":     nil,
+				"kldzf":  nil,
+			},
+			input: "abcdeskld",
+			want:  []string{"a", "bcde", "s", "kld"},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, MaximumMatching(tt.input, tt.m))
+		})
+	}
+}

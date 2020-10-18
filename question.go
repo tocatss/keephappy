@@ -1963,3 +1963,42 @@ func Hanoi(n int) int {
 	fmt.Println("OK")
 	return res
 }
+
+// 最大正向匹配分词算法
+// 输入： 今天的天气真好我们出去玩耍吧
+// 字典：今天， 天气真好，天气，真好， 我们，出去玩耍，出去，玩耍
+// 输出： 今天 的 天气真好 我们 出去玩耍 吧
+// TODO: Trie树 ?
+func MaximumMatching(input string, m map[string]interface{}) []string {
+
+	if len(m) == 0 {
+		return []string{input}
+	}
+	if len(input) <= 1 {
+		return []string{input}
+	}
+
+	rs := []rune(input)
+	ans := make([]string, 0, len(rs))
+	for i := 0; i < len(rs); {
+		isFound := false
+		for j := len(rs); j > i; j-- {
+			k := string(rs[i:j])
+			if _, ok := m[k]; ok {
+				ans = append(ans, k)
+				i = j
+				isFound = true
+				break
+			}
+		}
+
+		if isFound {
+			continue
+		}
+
+		ans = append(ans, string(rs[i:i+1]))
+		i++
+	}
+
+	return ans
+}
