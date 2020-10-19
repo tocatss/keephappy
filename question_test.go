@@ -1703,3 +1703,57 @@ func Test_Gcd(t *testing.T) {
 		})
 	}
 }
+
+func Test_RectangleMNM(t *testing.T) {
+	tests := []struct {
+		name string
+		n    int
+		m    int
+		want int
+	}{
+		{
+			name: "3x3 => 9 + 6 + 3 + 6 + 4 + 2 + 3 + 2 + 1",
+			n:    3,
+			m:    3,
+			want: 36,
+		},
+		{
+			name: "3x2 => 6 + 4 + 2 + 3 + 2 + 1",
+			n:    3,
+			m:    2,
+			want: 18,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, RectangleMN(tt.n, tt.m))
+		})
+	}
+}
+
+func Test_SquareMN(t *testing.T) {
+	tests := []struct {
+		name string
+		n    int
+		m    int
+		want int
+	}{
+		{
+			name: "3x3 =>6 + 4 + 2 + 4 + 2 + 1 + 2 + 1 + 0",
+			n:    3,
+			m:    3,
+			want: 22,
+		},
+		{
+			name: "3x2 => 4 + 2 + 1 + 2 + 1 + 0",
+			n:    3,
+			m:    2,
+			want: 10,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, SquareMN(tt.n, tt.m))
+		})
+	}
+}

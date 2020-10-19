@@ -2024,3 +2024,33 @@ func Gcd(a, b int) int {
 
 	return gcd(a, b)
 }
+
+// 求mn中矩形的个数
+func RectangleMN(n, m int) int {
+	ans := 0
+	for i := m; i >= 1; i-- {
+		sum := 0
+		for j := 1; j <= n; j++ {
+			sum += j
+		}
+		ans += i * sum
+	}
+	return ans
+}
+
+// 求mn中矩形(除正方形）的个数
+func SquareMN(n, m int) int {
+	ans := 0
+	for i := m; i >= 1; i-- {
+		sum := 0
+		for j := n; j >= 1; j-- {
+			if i < j {
+				sum += i*j - i
+				continue
+			}
+			sum += i*j - j
+		}
+		ans += sum
+	}
+	return ans
+}
