@@ -2054,3 +2054,186 @@ func SquareMN(n, m int) int {
 	}
 	return ans
 }
+
+// 买卖股票的最佳时机 II
+// 给定一个数组，它的第 i 个元素是一支给定股票第 i 天的价格。
+// 设计一个算法来计算你所能获取的最大利润。你可以尽可能地完成更多的交易（多次买卖一支股票）。
+// 注意：你不能同时参与多笔交易（你必须在再次购买前出售掉之前的股票）。
+// 输入: [7,1,5,3,6,4]
+// 输出: 7
+// 解释: 在第 2 天（股票价格 = 1）的时候买入，在第 3 天（股票价格 = 5）的时候卖出, 这笔交易所能获得利润 = 5-1 = 4 。
+//      随后，在第 4 天（股票价格 = 3）的时候买入，在第 5 天（股票价格 = 6）的时候卖出, 这笔交易所能获得利润 = 6-3 = 3 。
+
+// 来源：力扣（LeetCode）
+// 链接：https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii
+// 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+func MaxProfit(prices []int) int {
+	if len(prices) == 0 {
+		return 0
+	}
+
+	var (
+		profit = 0
+		bought = -1
+
+		canBuy = func(i int) bool {
+			if i >= len(prices)-1 {
+				return false
+			}
+
+			// 下一笔价格高于当前价格时，即可买入。
+			return prices[i+1] > prices[i]
+		}
+		canSell = func(i int) bool {
+			if i > len(prices)-1 {
+				return false
+			}
+			// 没买不能卖。
+			if bought == -1 {
+				return false
+			}
+			if prices[i] < bought {
+				return false
+			}
+			// 下一笔价格高于当前价格时，再下一笔交易的时候卖出。
+			if next := i + 1; next <= len(prices)-1 && prices[next] > prices[i] {
+				return false
+			}
+
+			return true
+		}
+	)
+
+	for i := 0; i < len(prices); i++ {
+		if bought == -1 {
+			if canBuy(i) {
+				bought = prices[i]
+				continue
+			}
+			continue
+		}
+
+		if canSell(i) {
+			profit += prices[i] - bought
+			bought = -1
+			continue
+		}
+	}
+
+	return profit
+}
+
+// [1,2,4,2,5,7,2,4,9,0]
+func MaxProfitWithTwice(prices []int) int {
+	mem := make(map[string]int)
+	return profitWithTimes(prices, mem, 0, 2)
+}
+
+func profitWithTimes(prices []int, mem map[string]int, from, times int) int {
+	if times <= 0 {
+		return 0
+	}
+	if len(prices) == 0 {
+		return 0
+	}
+
+	onceMaxProfit := 0
+	for i := from; i < len(prices); i++ {
+		if !canBought(prices, i) {
+			continue
+		}
+		max := 0
+		for j := i + 1; j < len(prices); j++ {
+			if canSell(prices, i, j) {
+				profit := prices[j] - prices[i]
+				times--
+				k := genMemKey(j+1, times)
+				nextProfit, ok := mem[k]
+				if !ok {
+					nextProfit = profitWithTimes(prices, mem, j+1, times)
+				}
+				if profit+nextProfit > max {
+					max = profit + nextProfit
+				}
+				times++
+			}
+		}
+		if max > onceMaxProfit {
+			onceMaxProfit = max
+		}
+	}
+
+	mem[genMemKey(from, times)] = onceMaxProfit
+
+	return onceMaxProfit
+}
+
+func canSell(prices []int, boughtAt, sellAt int) bool {
+	if sellAt <= boughtAt || sellAt >= len(prices) {
+		return false
+	}
+	if prices[sellAt] < prices[boughtAt] {
+		return false
+	}
+	// 下一笔价格高于当前价格时，在下一笔交易的时候卖出。
+	if next := sellAt + 1; next <= len(prices)-1 && prices[next] > prices[sellAt] {
+		return false
+	}
+
+	return true
+}
+
+func canBought(prices []int, boughtAt int) bool {
+	if boughtAt >= len(prices) {
+		return false
+	}
+	// 下一笔价格低于当前价格时，在下一笔交易的时候买入。
+	if next := boughtAt + 1; next <= len(prices)-1 && prices[next] < prices[boughtAt] {
+		return false
+	}
+
+	return true
+}
+
+func genMemKey(from, times int) string {
+	return fmt.Sprintf("%d-%d", from, times)
+}
+
+func MaxProfitWithTwiceWithoutCache(prices []int) int {
+	return profitWithTimesWithoutCache(prices, 0, 2)
+}
+
+func profitWithTimesWithoutCache(prices []int, from, times int) int {
+	if times <= 0 {
+		return 0
+	}
+	if len(prices) == 0 {
+		return 0
+	}
+
+	onceMaxProfit := 0
+	for i := from; i < len(prices); i++ {
+		if !canBought(prices, i) {
+			continue
+		}
+		max := 0
+		for j := i + 1; j < len(prices); j++ {
+			if canSell(prices, i, j) {
+				profit := prices[j] - prices[i]
+				times--
+				nextProfit := profitWithTimesWithoutCache(prices, j+1, times)
+				if profit+nextProfit > max {
+					max = profit + nextProfit
+				}
+				times++
+			}
+		}
+		if max > onceMaxProfit {
+			onceMaxProfit = max
+		}
+	}
+
+	// log.Print(mem)
+
+	return onceMaxProfit
+}
