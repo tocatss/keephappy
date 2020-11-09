@@ -49,62 +49,62 @@ func (g *graph) DFSTraverseBySlice() {
 //         D
 // want : A,D,G
 func BFSShortestPath(graph map[string][]string, from, to string) []string {
+	if graph == nil {
+		return []string{}
+	}
 	if _, ok := graph[from]; !ok {
-		return nil
+		return []string{}
 	}
 
+	type node struct {
+		val    string
+		parent *node
+	}
+
+	ns := make([]*node, 0, 2*len(graph))
 	visited := make(map[string]bool)
-	ns := make([]*node, 0, 10)
-	ns = append(ns, &node{
-		parent: nil,
-		value:  from,
-	})
 
-	found := bfs(ns, graph, visited, to)
-	tail := make([]string, 0, 10)
-	for found != nil {
-		tail = append(tail, found.value)
-		found = found.parent
+	ns = append(ns, &node{val: from})
+	visited[from] = true
+
+	var toNode *node
+	for i := 0; i < len(ns); i++ {
+		children, ok := graph[ns[i].val]
+		if !ok {
+			continue
+		}
+		for _, child := range children {
+			if child == to {
+				toNode = &node{val: to, parent: ns[i]}
+				break
+			}
+			if visited[child] {
+				continue
+			}
+			visited[child] = true
+			ns = append(ns, &node{val: child, parent: ns[i]})
+		}
+		if toNode != nil {
+			break
+		}
 	}
+
+	// not found
+	if toNode == nil {
+		return []string{}
+	}
+
+	tail := make([]string, 0, len(ns))
+	for n := toNode; n != nil; n = n.parent {
+		tail = append(tail, n.val)
+	}
+
 	res := make([]string, 0, len(tail))
 	for i := len(tail) - 1; i >= 0; i-- {
 		res = append(res, tail[i])
 	}
 
 	return res
-}
-
-type node struct {
-	parent *node
-	value  string
-}
-
-func bfs(ns []*node, graph map[string][]string, visited map[string]bool, want string) *node {
-	for i := 0; i < len(ns); i++ {
-		n := ns[i]
-		next, ok := graph[n.value]
-		if !ok {
-			continue
-		}
-		for _, v := range next {
-			if _, ok := visited[v]; ok {
-				continue
-			}
-			visited[v] = true
-
-			if v == want {
-				return &node{
-					parent: n,
-					value:  v,
-				}
-			}
-			ns = append(ns, &node{
-				parent: n,
-				value:  v,
-			})
-		}
-	}
-	return nil
 }
 
 // 狄杰斯特拉计算加权图的最短路径
@@ -133,7 +133,6 @@ func Dijkstra(graph map[string]map[string]int, from, to string) int {
 	weight := -1
 
 	for n := findNextNode(costs, visited, weight); n != ""; n = findNextNode(costs, visited, weight) {
-		log.Print("next", n)
 		visited[n] = true
 		weight = costs[n]
 

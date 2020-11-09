@@ -40,7 +40,7 @@ func TestGraph_BFSShortestPath(t *testing.T) {
 		//   \            /
 		//          D
 		{
-			name: "from A to D",
+			name: "from A to G",
 			graph: map[string][]string{
 				"A": {"B", "C", "D"},
 				"B": {"F"},
